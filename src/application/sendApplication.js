@@ -70,8 +70,10 @@ async function sendapply(message, args, Discord){
                                             appid.edit(secondEmbed);
                                             const reply = await message.reply("Your application has been recorded. Please be patient as the officers review your application. Make sure that your DMs are open so that you can be informed when your application has been accpeted or rejected.")
                                                 .then(setTimeout(()=>{reply.delete();}, 60000));
+                                            let role2 = message.guild.roles.cache.find(r => r.name.toLowerCase() === process.env.JUST_JOINED);
                                             let role = message.guild.roles.cache.find(r => r.name.toLowerCase() === process.env.APPLICATION_ROLE);
                                             if(role) author.roles.add(role);
+                                            if(role2 && author.roles.some(r => r.name.toLowerCase() === process.env.APPLICATION_ROLE)) author.roles.remove(role2);
                                             else console.log(`Could not find ${process.env.APPLICATION_ROLE}`);
                                         } else {
                                             const sendmessage = await message.channel.send("Applicatoin Stopped")
