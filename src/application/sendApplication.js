@@ -68,6 +68,13 @@ async function sendapply(message, args, Discord){
                                                     .setFooter(`Author ID: ${message.author.id}`)
                                                     .setTimestamp(message.createdAt);
 
+                                                const whatYouSaid = new Discord.MessageEmbed()
+                                                    .setColor("ORANGE")
+                                                    .setTitle("What Your Application to Join ELIXIR Said")
+                                                    .setDescription(`**Applicant Nitrotype Profile Link:** ${args[1]}\n**Applicant Accuracy:** ${args[2]}\n**Applicant WPM:** ${args[3]}`)
+                                                    .setFooter(`Your application is waiting for one of the officers or captain to approve/reject. If there was an error in your application, please contact one of the online officers or captain`)
+                                                    .setTimestamp(message.createdAt);
+
                                                 appid.edit(secondEmbed);
                                                 const reply = await message.reply("Your application has been recorded. Please be patient as the officers review your application. Make sure that your DMs are open so that you can be informed when your application has been accpeted or rejected.")
                                                     .then(setTimeout(()=>{reply.delete();}, 60000));
@@ -76,6 +83,7 @@ async function sendapply(message, args, Discord){
                                                 if(role) author.roles.add(role);
                                                 if(role2 && author.roles.cache.some(r => r.name.toLowerCase() === process.env.APPLICATION_ROLE)) author.roles.remove(role2);
                                                 else console.log(`Could not find ${process.env.APPLICATION_ROLE}`);
+                                                message.guild.members.cache.get(author.id).send(whatYouSaid);
                                             } else {
                                                 const sendmessage = await message.channel.send("Applicatoin Stopped")
                                                     .then(setTimeout(() => {sendmessage.delete();}, 10000));
