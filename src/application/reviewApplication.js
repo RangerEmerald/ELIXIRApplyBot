@@ -23,8 +23,10 @@ async function reviewapply(message, args, Discord){
                                 .setFooter(application.embeds[0].description)
                                 .setTimestamp(application.embeds[0].timestamp);
 
-                            if(args[3]){
-                                applicationEmbed.setDescription(`**Application ${accrejt}ed by <@!${message.author.id}>**\n**Reason:** ${args[3]}`);
+                            const reason = args.splice(3).join(" ");
+
+                            if(reason){
+                                applicationEmbed.setDescription(`**Application ${accrejt}ed by <@!${message.author.id}>**\n**Reason:** ${reason}`);
                             } else {
                                 applicationEmbed.setDescription(`**Application ${accrejt}ed by <@!${message.author.id}>**`);
                             }
@@ -48,7 +50,7 @@ async function reviewapply(message, args, Discord){
 
                             application.edit(applicationEmbed);
                             message.delete();
-                            sendAuthorDM.senddm(authorID, accrejt, message.author.tag, message, args, Discord);
+                            sendAuthorDM.senddm(authorID, accrejt, message.author.tag, message, args, Discord, reason);
                             const reply = await message.reply(`You have ${accrejt}ed Application #${args[1]}`)
                                 .then(setTimeout(() => {reply.delete();}, 10000));
                         } else {

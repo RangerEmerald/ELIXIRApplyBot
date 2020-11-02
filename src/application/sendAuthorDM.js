@@ -1,6 +1,6 @@
 require('dotenv').config();
 
-async function senddm(authorID, accrejt, sender, message, args, Discord){
+async function senddm(authorID, accrejt, sender, message, args, Discord, reason){
     let consoles = message.guild.channels.cache.get(process.env.OFFICER_CHANNEL_ID);
 
     const dmEmbed = new Discord.MessageEmbed()
@@ -14,8 +14,8 @@ async function senddm(authorID, accrejt, sender, message, args, Discord){
         dmEmbed.setColor("RED");
     }
 
-    if(args[3]){
-        dmEmbed.setDescription(`**Reason:** ${args[3]}`);
+    if(reason){
+        dmEmbed.setDescription(`**Reason:** ${reason}`);
     } else {
         dmEmbed.setDescription(`**Reason:** None`);
     }
