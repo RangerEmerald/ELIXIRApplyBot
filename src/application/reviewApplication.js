@@ -1,6 +1,6 @@
 const sendAuthorDM = require('./sendAuthorDM');
 
-async function reviewapply(message, args, Discord){
+async function reviewapply(message, args, Discord, prefix){
     try{
         if(args[0] === "application"){
             if(!args[1]){
@@ -23,7 +23,7 @@ async function reviewapply(message, args, Discord){
                                 .setFooter(application.embeds[0].description)
                                 .setTimestamp(application.embeds[0].timestamp);
 
-                            const reason = args.splice(3).join(" ");
+                            const reason = message.content.slice(prefix.length).split(" ").splice(3).join(" ");
 
                             if(reason){
                                 applicationEmbed.setDescription(`**Application ${accrejt}ed by <@!${message.author.id}>**\n**Reason:** ${reason}`);

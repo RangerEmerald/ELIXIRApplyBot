@@ -31,7 +31,7 @@ client.on('message', async message => {
             }
         } else if(message.channel.id === process.env.APPLYSEND_CHANNEL_ID){
             if(message.content.toLowerCase().startsWith(prefix)){
-                reviewApplication.reviewapply(message, args, Discord);
+                reviewApplication.reviewapply(message, args, Discord, prefix);
             }
         }
     } catch(err) {
