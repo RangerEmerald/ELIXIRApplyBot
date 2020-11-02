@@ -53,8 +53,7 @@ async function sendapply(message, args, Discord){
                                         }
                                     });
                                     collector.on('end', async (collected, reason) => {
-                                        if(reason === "time") return;
-                                        else if(reason === "yes"){
+                                        if(reason === "yes"){
                                             let applicationSend = message.guild.channels.cache.get(process.env.APPLYSEND_CHANNEL_ID);
 
                                             const appid = await applicationSend.send(`_ _`);
