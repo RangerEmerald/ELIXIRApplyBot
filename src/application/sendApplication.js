@@ -37,6 +37,7 @@ async function sendapply(message, args, Discord){
                                         .setTimestamp(message.createdAt);
 
                                     const sendIsCorrect = await message.channel.send(isCorrectEmbed);
+                                    const author = message.member;
                                     const collector = new Discord.MessageCollector(message.channel, m => m.author.id === message.author.id, { time: 30000 });
                                     collector.on('collect', async message => {
                                         if(message.content.toLowerCase() === "yes"){
@@ -46,6 +47,7 @@ async function sendapply(message, args, Discord){
                                             message.delete();
                                             collector.stop("else");
                                         } else {
+                                            message.delete();
                                             const reply = await message.reply("You most choose either `yes` or `no`!")
                                                 .then(setTimeout(() => {reply.delete();}, 5000));
                                         }
@@ -58,7 +60,7 @@ async function sendapply(message, args, Discord){
                                             const appid = await applicationSend.send(`_ _`);
 
                                             const secondEmbed = new Discord.MessageEmbed()
-                                                .setColor("RED")
+                                                .setColor("ORANGE")
                                                 .setAuthor(message.author.tag)
                                                 .setTitle(`New Application Sent By: ${message.author.tag}\nApplication ID: ${appid.id}`)
                                                 .setDescription(`**Applicant Nitrotype Profile Link:** ${args[1]}\n**Applicant Accuracy:** ${args[2]}\n**Applicant WPM:** ${args[3]}`)
@@ -67,8 +69,11 @@ async function sendapply(message, args, Discord){
                                                 .setTimestamp(message.createdAt);
 
                                             appid.edit(secondEmbed);
-                                            const reply = await message.reply("Your application has been recorded. Please be patiant as the officers review your application. Make sure that your DMs are open so that you can be informed when your application has been accpeted or rejected.")
+                                            const reply = await message.reply("Your application has been recorded. Please be patient as the officers review your application. Make sure that your DMs are open so that you can be informed when your application has been accpeted or rejected.")
                                                 .then(setTimeout(()=>{reply.delete();}, 60000));
+                                            let role = message.guild.roles.cache.find(r => r.name.toLowerCase() === process.env.APPLICATION_ROLE);
+                                            if(role) author.roles.add(role);
+                                            else console.log(`Could not find ${process.env.APPLICATION_ROLE}`);
                                         } else {
                                             const sendmessage = await message.channel.send("Applicatoin Stopped")
                                                 .then(setTimeout(() => {sendmessage.delete();}, 10000));
