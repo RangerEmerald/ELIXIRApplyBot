@@ -12,10 +12,10 @@ function validURL(string) {
     return url.protocol === "http:" || url.protocol === "https:";
 }
 
-async function sendDelete(messages, message, time){
+async function sendDelete(messages, message){
     message.delete();
     const reply = await message.reply(messages)
-        .then(setTimeout(()=>{reply.delete();}, time));
+        .then(setTimeout(()=>{reply.delete();}, 10000));
 }
 
 async function sendapply(message, args, Discord){
@@ -81,28 +81,28 @@ async function sendapply(message, args, Discord){
                                         sendIsCorrect.delete();
                                     });
                                 } else {
-                                    sendDelete("Make sure your WPM only consists of numbers! Do not add any extra characters at the end of your WPM!", message, 5000);
+                                    sendDelete("Make sure your WPM only consists of numbers! Do not add any extra characters at the end of your WPM!", message);
                                 }
                             } else {
-                                sendDelete("Make sure you include your WPM! The format of the application is: `elixir.apply [your nitrotype profile link] [nitrotype accuracy] [nitrotype wpm]`!", message, 10000);
+                                sendDelete("Make sure you include your WPM! The format of the application is: `elixir.apply [your nitrotype profile link] [nitrotype accuracy] [nitrotype wpm]`!", message);
                             }
                         } else {
-                            sendDelete("Make sure your accuracy only consists of numbers! Do not add any extra characters at the end of your accuracy!", message, 10000);
+                            sendDelete("Make sure your accuracy only consists of numbers! Do not add any extra characters at the end of your accuracy!", message);
                         }
                     } else {
-                        sendDelete("Make sure you include your accuracy! The format of the application is: `elixir.apply [your nitrotype profile link] [nitrotype accuracy] [nitrotype wpm]`!", message, 10000);
+                        sendDelete("Make sure you include your accuracy! The format of the application is: `elixir.apply [your nitrotype profile link] [nitrotype accuracy] [nitrotype wpm]`!", message);
                     }
                 } else {
-                    sendDelete(`${args[1]} is not your nitrotype profile link! To get your NT profile, look to the top right and find the dropdown menu. Scroll over it, and tap my public profile. The URL at the top is what you should put in here.`, message, 10000);
+                    sendDelete(`${args[1]} is not your nitrotype profile link! To get your NT profile, look to the top right and find the dropdown menu. Scroll over it, and tap my public profile. The URL at the top is what you should put in here.`, message);
                 }
             } else {
-                sendDelete(`${args[1]} is not a valid URL! To get your NT profile, look to the top right and find the dropdown menu. Scroll over it, and tap my public profile. The URL at the top is what you should put in here.`, message, 10000);
+                sendDelete(`${args[1]} is not a valid URL! To get your NT profile, look to the top right and find the dropdown menu. Scroll over it, and tap my public profile. The URL at the top is what you should put in here.`, message);
             }
         } else {
-            sendDelete("Your application is not complete! Did you mean to do: `elixir.apply [your nitrotype profile link] [nitrotype accuracy] [nitrotype wpm]`?", message, 5000)
+            sendDelete("Your application is not complete! Did you mean to do: `elixir.apply [your nitrotype profile link] [nitrotype accuracy] [nitrotype wpm]`?", message);
         }
     } else {
-        sendDelete("That is not a command! Did you mean to do: `elixir.apply [your nitrotype profile link] [nitrotype accuracy] [nitrotype wpm]`?", message, 5000);
+        sendDelete("That is not a command! Did you mean to do: `elixir.apply [your nitrotype profile link] [nitrotype accuracy] [nitrotype wpm]`?", message);
     }
 }
 
