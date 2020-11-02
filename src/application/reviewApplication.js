@@ -18,11 +18,28 @@ async function reviewapply(message, args, Discord){
                     if(application.embeds[0].author !== null){
                         let authorID = application.embeds[0].footer.text.slice(11);
                         const applicationEmbed = new Discord.MessageEmbed()
-                            .setColor("GREEN")
                             .setTitle(`Application Sent By: ${application.embeds[0].author.name}\nApplication ID: ${args[1]}`)
                             .setDescription(`**Application ${accrejt}ed by <@!${message.author.id}>**`)
                             .setFooter(application.embeds[0].description)
                             .setTimestamp(application.embeds[0].timestamp);
+
+                        let role = message.guild.roles.cache.find(r => r.name.toLowerCase() === process.env.APPLICATION_ROLE);
+                        let author = message.guild.members.cache.get(authorID);
+                        if(accrejt === "accept"){
+                            let rolea = message.guild.roles.cache.find(r => r.name.toLowerCase() === process.env.APPLICATION_APPROVED);
+                            if(role && rolea && author){
+                                author.roles.remove(role);
+                                author.roles.add(rolea);
+                            }
+                            applicationEmbed.setColor("GREEN");
+                        } else {
+                            let roler = message.guild.roles.cache.find(r => r.name.toLowerCase() === process.env.APPLICATION_REJECTED);
+                            if(role && roler && author){
+                                author.roles.remove(role);
+                                author.roles.add(roler);
+                            }
+                            applicationEmbed.setColor("RED");
+                        }
 
                         application.edit(applicationEmbed);
                         message.delete();
