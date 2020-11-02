@@ -22,6 +22,8 @@ client.on('message', async message => {
             if(message.content.toLowerCase().startsWith(prefix)){
                 sendApplication.sendapply(message, args, Discord);
                 return;
+            } else if (message.member.roles.cache.find(r => r.name.toLowerCase() === "officer") || message.member.roles.cache.find(r => r.name.toLowerCase() === "captain")) {
+                setTimeout(()=>{message.delete();}, 60000);
             } else {
                 message.delete();
                 const reply = await message.reply("Please do not talk here! To apply, do `elixir.apply [your nitrotype profile link] [nitrotype accuracy] [nitrotype wpm]`!")
