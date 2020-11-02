@@ -61,4 +61,15 @@ client.on('messageDelete', async message => {
     }
 });
 
+client.on('guildMemberAdd', async member => {
+    try{
+        let role = member.guild.roles.cache.find(r => r.name.toLowerCase() === process.env.JUST_JOINED);
+        if(role){
+            member.roles.add(role);
+        }
+    } catch(err) {
+        console.log(err);
+    }
+});
+
 client.login(process.env.BOT_TOKEN);
