@@ -1,6 +1,4 @@
 require('dotenv').config();
-const Discord = require('discord.js')
-const client = new Discord.Client();
 
 async function senddm(authorID, accrejt, sender, message){
     let consoles = message.guild.channels.cache.get(process.env.OFFICER_CHANNEL_ID);
