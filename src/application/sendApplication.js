@@ -83,7 +83,8 @@ async function sendapply(message, args, Discord){
                                                 if(role) author.roles.add(role);
                                                 if(role2 && author.roles.cache.some(r => r.name.toLowerCase() === process.env.APPLICATION_ROLE)) author.roles.remove(role2);
                                                 else console.log(`Could not find ${process.env.APPLICATION_ROLE}`);
-                                                message.guild.members.cache.get(author.id).send(whatYouSaid);
+                                                message.guild.members.cache.get(author.id).send(whatYouSaid)
+                                                    .catch((err) => {applicationSend.send(`<@!${author.id}> does not have their dm's open! Please inform them to open their dms!`);});
                                             } else {
                                                 const sendmessage = await message.channel.send("Application Stopped")
                                                     .then(setTimeout(() => {sendmessage.delete();}, 10000));
