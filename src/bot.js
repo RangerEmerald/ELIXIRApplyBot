@@ -19,18 +19,17 @@ client.on('message', async message => {
         if(message.author.bot) return;
         let args = message.content.toLowerCase().slice(prefix.length).split(" ");
         if(message.channel.id === process.env.APPLY_CHANNEL_ID){
-            if(message.content.toLowerCase().startsWith(prefix)){
                 sendApplication.sendapply(message, args, Discord);
+            if(message.content.toLowerCase().startsWith(prefix)){
                 return;
-            } else if (message.member.roles.cache.find(r => r.name.toLowerCase() === "officer") || message.member.roles.cache.find(r => r.name.toLowerCase() === "captain")) {
-                setTimeout(()=>{message.delete();}, 60000);
-            } else {
+            } else if (message.member.roles.cache.find(r => r.name.toLowerCase() === "officer") || message.member.roles.cache.find(r => r.name.toLowerCase() === "captain")) setTimeout(()=>{message.delete();}, 60000);
+            else {
                 message.delete();
                 const reply = await message.reply("Please do not talk here! To apply, do `elixir.apply [your nitrotype profile link] [nitrotype accuracy] [nitrotype wpm]`!")
                     .then(setTimeout(()=>{reply.delete();}, 5000))
             }
-        } else if(message.channel.id === process.env.APPLYSEND_CHANNEL_ID){
-            if(message.content.toLowerCase().startsWith(prefix)){
+        } else if(message.content.toLowerCase().startsWith(prefix)){ 
+            if(message.channel.id === process.env.APPLYSEND_CHANNEL_ID){
                 reviewApplication.reviewapply(message, args, Discord, prefix);
             }
         }
