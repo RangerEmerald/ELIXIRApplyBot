@@ -85,7 +85,7 @@ async function sendapply(message, args, Discord){
                                                 else console.log(`Could not find ${process.env.APPLICATION_ROLE}`);
                                                 message.guild.members.cache.get(author.id).send(whatYouSaid);
                                             } else {
-                                                const sendmessage = await message.channel.send("Applicatoin Stopped")
+                                                const sendmessage = await message.channel.send("Application Stopped")
                                                     .then(setTimeout(() => {sendmessage.delete();}, 10000));
                                             }
                                             sendIsCorrect.delete();
