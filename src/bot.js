@@ -19,9 +19,8 @@ client.on('message', async message => {
         if(message.author.bot) return;
         let args = message.content.toLowerCase().slice(prefix.length).split(" ");
         if(message.channel.id === process.env.APPLY_CHANNEL_ID){
-                sendApplication.sendapply(message, args, Discord);
             if(message.content.toLowerCase().startsWith(prefix)){
-                return;
+                sendApplication.sendapply(message, args, Discord);
             } else if (message.member.roles.cache.find(r => r.name.toLowerCase() === "officer") || message.member.roles.cache.find(r => r.name.toLowerCase() === "captain")) setTimeout(()=>{message.delete();}, 60000);
             else {
                 message.delete();
