@@ -2,8 +2,11 @@ require('dotenv').config();
 const Discord = require('discord.js');
 const client = new Discord.Client({partials:["MESSAGE"]});
 
-const sendApplication = require('./application/sendApplication.js');
-const reviewApplication = require('./application/reviewApplication.js');
+const sendApplication = require('./commands/application/sendApplication.js');
+const reviewApplication = require('./commands/application/reviewApplication.js');
+
+const question = require('./commands/misc/question.js');
+const answerQuestion = require('./commands/misc/answerQuestion.js');
 
 const prefix = process.env.BOT_PREFIX;
 
@@ -15,13 +18,12 @@ client.on('ready', () => {
 
 client.on('message', async message => {
     try{
-        if(message.channel.type === "dm") return;
         if(message.author.bot) return;
         let args = message.content.toLowerCase().slice(prefix.length).split(" ");
         if(message.channel.id === process.env.APPLY_CHANNEL_ID){
             if(message.content.toLowerCase().startsWith(prefix)){
                 sendApplication.sendapply(message, args, Discord);
-            } else if (message.member.roles.cache.find(r => r.name.toLowerCase() === "officer") || message.member.roles.cache.find(r => r.name.toLowerCase() === "captain")) setTimeout(()=>{message.delete();}, 60000);
+            } else if(message.member.roles.cache.find(r => r.name.toLowerCase() === "officer") || message.member.roles.cache.find(r => r.name.toLowerCase() === "captain")) setTimeout(()=>{message.delete();}, 60000);
             else {
                 message.delete();
                 const reply = await message.reply("Please do not talk here! To apply, do `elixir.apply [your nitrotype profile link] [nitrotype accuracy] [nitrotype wpm]`!")
@@ -30,6 +32,10 @@ client.on('message', async message => {
         } else if(message.content.toLowerCase().startsWith(prefix)){ 
             if(message.channel.id === process.env.APPLYSEND_CHANNEL_ID){
                 reviewApplication.reviewapply(message, args, Discord, prefix);
+            } else if(message.channel.type === "dm"){
+                question.askQuestion(message, args, Discord, client);
+            } else if(message.channel.id === process.env.QUESTION_CHANNEL){
+                answerQuestion.aswQuestion(args, message, Discord);
             }
         }
     } catch(err) {
