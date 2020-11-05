@@ -7,7 +7,7 @@ async function reviewapply(message, args, Discord, prefix){
                 message.delete();
                 const reply = await message.reply("The format for accepting an application is: `elixir.application [application id] [accept/reject] [reason(optional)]`")
                     .then(setTimeout(() => {reply.delete();}, 10000));
-            } else if(!isNaN(args[1])){
+            } else if(!isNaN(args[1])){     
                 const application = await message.channel.messages.fetch(args[1]);
                 if(application){
                     let accrejt = args[2];
@@ -65,6 +65,7 @@ async function reviewapply(message, args, Discord, prefix){
                         .then(setTimeout(() => {reply.delete();}, 10000));
                 }
             } else {
+                message.delete();
                 const reply = await message.reply('The Applicatoin ID should be a series of numbers!')
                     .then(setTimeout(() => {reply.delete();}, 10000));
             }
