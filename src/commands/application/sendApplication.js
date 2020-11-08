@@ -18,21 +18,22 @@ async function sendDelete(messages, message){
         .then(setTimeout(()=>{reply.delete();}, 10000));
 }
 
-async function sendapply(message, args, Discord){
+async function sendapply(message, args, Discord, userApplyList){
     try{
         if(args[0] === "apply"){
             if(args[1]){
                 if(validURL(args[1])){
                     let domainName = args[1].slice(12, 21);
                     if(domainName === "nitrotype"){
-                        let end = args[1].slice(21, 24);
-                        if(end === "com"){
+                        let end = args[1].slice(21, 25);
+                        if(end === ".com"){
                             let seeRacer = args[1].slice(26, 32);
                             if(seeRacer === "racer/"){
                                 if(args[2]){
                                     if(!isNaN(args[2])){
                                         if(args[3]){
                                             if(!isNaN(args[3])){
+                                                userApplyList[message.author.id] = true;
                                                 message.delete();
                                                 const isCorrectEmbed = new Discord.MessageEmbed()
                                                     .setColor("ORANGE")
@@ -85,15 +86,16 @@ async function sendapply(message, args, Discord){
                                                         let role2 = message.guild.roles.cache.find(r => r.name.toLowerCase() === process.env.JUST_JOINED);
                                                         let role = message.guild.roles.cache.find(r => r.name.toLowerCase() === process.env.APPLICATION_ROLE);
                                                         if(role) author.roles.add(role);
-                                                        if(role2 && author.roles.cache.some(r => r.name.toLowerCase() === process.env.APPLICATION_ROLE)) author.roles.remove(role2);
+                                                        if(role2) author.roles.remove(role2);
                                                         else console.log(`Could not find ${process.env.APPLICATION_ROLE}`);
                                                         message.guild.members.cache.get(author.id).send(whatYouSaid)
                                                             .catch((err) => {applicationSend.send(`<@!${author.id}> does not have their dm's open! Please inform them to open their dms!`);});
-                                                    } else {
+                                                    } else if(reason === "else" || reason === "time"){
                                                         const sendmessage = await message.channel.send("Application Stopped")
                                                             .then(setTimeout(() => {sendmessage.delete();}, 10000));
                                                     }
                                                     sendIsCorrect.delete();
+                                                    delete userApplyList[author.id];
                                                 });
                                             } else {
                                                 sendDelete("Make sure your WPM only consists of numbers! Do not add any extra characters at the end of your WPM!", message);
