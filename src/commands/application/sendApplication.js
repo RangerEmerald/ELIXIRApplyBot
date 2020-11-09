@@ -60,18 +60,8 @@ async function sendapply(message, args, Discord, userApplyList){
                                                 });
                                                 collector.on('end', async (collected, reason) => {
                                                     if(reason === "yes"){
+                                                        let dmOpen;
                                                         let applicationSend = message.guild.channels.cache.get(process.env.APPLYSEND_CHANNEL_ID);
-
-                                                        const appid = await applicationSend.send(`_ _`);
-
-                                                        const secondEmbed = new Discord.MessageEmbed()
-                                                            .setColor("ORANGE")
-                                                            .setAuthor(message.author.tag)
-                                                            .setTitle(`New Application Sent By: ${message.author.tag}\nApplication ID: ${appid.id}`)
-                                                            .setDescription(`**Applicant Nitrotype Profile Link:** ${args[1]}\n**Applicant Accuracy:** ${args[2]}\n**Applicant WPM:** ${args[3]}`)
-                                                            .addField(`Is Application Accepted:`, `Application Pending Review`, true)
-                                                            .setFooter(`Author ID: ${message.author.id}`)
-                                                            .setTimestamp(message.createdAt);
 
                                                         const whatYouSaid = new Discord.MessageEmbed()
                                                             .setColor("ORANGE")
@@ -79,17 +69,33 @@ async function sendapply(message, args, Discord, userApplyList){
                                                             .setDescription(`**Applicant Nitrotype Profile Link:** ${args[1]}\n**Applicant Accuracy:** ${args[2]}\n**Applicant WPM:** ${args[3]}`)
                                                             .setFooter(`Your application is waiting for one of the officers or captain to approve/reject. If there was an error in your application, please contact one of the online officers or captain`)
                                                             .setTimestamp(message.createdAt);
-
-                                                        appid.edit(secondEmbed);
-                                                        const reply = await message.reply("Your application has been recorded. Please be patient as the officers review your application. Make sure that your DMs are open so that you can be informed when your application has been accpeted or rejected. Also, if you have any question, DM <@!772601531476213791>. The format for asking a question is: `elixir.question [question]`")
-                                                            .then(setTimeout(()=>{reply.delete();}, 60000));
-                                                        let role2 = message.guild.roles.cache.find(r => r.name.toLowerCase() === process.env.JUST_JOINED);
-                                                        let role = message.guild.roles.cache.find(r => r.name.toLowerCase() === process.env.APPLICATION_ROLE);
-                                                        if(role) author.roles.add(role);
-                                                        if(role2) author.roles.remove(role2);
-                                                        else console.log(`Could not find ${process.env.APPLICATION_ROLE}`);
                                                         message.guild.members.cache.get(author.id).send(whatYouSaid)
-                                                            .catch((err) => {applicationSend.send(`<@!${author.id}> does not have their dm's open! Please inform them to open their dms!`);});
+                                                            .catch(async() => {
+                                                                const reply = await message.reply("Your application was not recorded since your dms are not open. Please open your dms and try again.")
+                                                                    .then(setTimeout(() => reply.delete(), 20000));
+                                                                dmOpen = false;
+                                                            });
+                                                        if(dmOpen){
+                                                            const appid = await applicationSend.send(`_ _`);
+    
+                                                            const secondEmbed = new Discord.MessageEmbed()
+                                                                .setColor("ORANGE")
+                                                                .setAuthor(message.author.tag)
+                                                                .setTitle(`New Application Sent By: ${message.author.tag}\nApplication ID: ${appid.id}`)
+                                                                .setDescription(`**Applicant Nitrotype Profile Link:** ${args[1]}\n**Applicant Accuracy:** ${args[2]}\n**Applicant WPM:** ${args[3]}`)
+                                                                .addField(`Is Application Accepted:`, `Application Pending Review`, true)
+                                                                .setFooter(`Author ID: ${message.author.id}`)
+                                                                .setTimestamp(message.createdAt);
+
+                                                            appid.edit(secondEmbed);
+                                                            const reply = await message.reply("Your application has been recorded. Please be patient as the officers review your application. Make sure that your DMs are open so that you can be informed when your application has been accpeted or rejected. Also, if you have any question, DM <@!772601531476213791>. The format for asking a question is: `elixir.question [question]`")
+                                                                .then(setTimeout(()=>{reply.delete();}, 60000));
+                                                            let role2 = message.guild.roles.cache.find(r => r.name.toLowerCase() === process.env.JUST_JOINED);
+                                                            let role = message.guild.roles.cache.find(r => r.name.toLowerCase() === process.env.APPLICATION_ROLE);
+                                                            if(role) author.roles.add(role);
+                                                            if(role2) author.roles.remove(role2);
+                                                            else console.log(`Could not find ${process.env.APPLICATION_ROLE}`);
+                                                        }
                                                     } else if(reason === "else" || reason === "time"){
                                                         const sendmessage = await message.channel.send("Application Stopped")
                                                             .then(setTimeout(() => {sendmessage.delete();}, 10000));
