@@ -81,7 +81,7 @@ async function sendapply(message, args, Discord, userApplyList){
                                                             .setTimestamp(message.createdAt);
 
                                                         appid.edit(secondEmbed);
-                                                        const reply = await message.reply("Your application has been recorded. Please be patient as the officers review your application. Make sure that your DMs are open so that you can be informed when your application has been accpeted or rejected. Also, if you have any question, DM <@!772601531476213791>. The format for asking a question is: `elixir.queston [question]`")
+                                                        const reply = await message.reply("Your application has been recorded. Please be patient as the officers review your application. Make sure that your DMs are open so that you can be informed when your application has been accpeted or rejected. Also, if you have any question, DM <@!772601531476213791>. The format for asking a question is: `elixir.question [question]`")
                                                             .then(setTimeout(()=>{reply.delete();}, 60000));
                                                         let role2 = message.guild.roles.cache.find(r => r.name.toLowerCase() === process.env.JUST_JOINED);
                                                         let role = message.guild.roles.cache.find(r => r.name.toLowerCase() === process.env.APPLICATION_ROLE);
