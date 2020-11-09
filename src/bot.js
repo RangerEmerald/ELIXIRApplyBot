@@ -12,10 +12,21 @@ const prefix = process.env.BOT_PREFIX;
 
 let userApplyList = {};
 
+const clientActivity = ['For someone to apply', 'For the prefix: elixir.'];
+let clientActivityNumber = 0;
 
 client.on('ready', () => {
     console.log(`${client.user.tag} has logged in`);
-    client.user.setActivity(`For someone to apply`, { type: "WATCHING"});
+    client.user.setActivity(`For someone to apply`, { type: "WATCHING"})
+        .then(setInterval(() => {
+            if(clientActivityNumber === 0){
+                clientActivityNumber = 1;
+                client.user.setActivity(clientActivity[clientActivityNumber], { type: "WATCHING" });
+            } else if(clientActivityNumber === 1){
+                clientActivityNumber = 0;
+                client.user.setActivity(clientActivity[clientActivityNumber], { type: "WATCHING" });
+            }
+        }, 5000));
 });
 
 client.on('message', async message => {
