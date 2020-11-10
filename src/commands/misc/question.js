@@ -1,5 +1,3 @@
-const { MessageEmbed } = require('discord.js');
-
 require('dotenv').config();
 
 async function askQuestion(message, args, Discord, client){
@@ -22,7 +20,7 @@ async function askQuestion(message, args, Discord, client){
 
                     qId.edit(embedQuestion);
                     const reply = await message.channel.send("Your question has been recorded. Please wait for the officers or captain to answer your question")
-                        .then(setTimeout(()=>reply.delete, 20000));
+                        .then(setTimeout(()=>reply.delete(), 20000));
                 } else {
                     const reply = await message.channel.send("You need to provide a question to ask! The format for asking a question is: `elixir.question [question]`")
                         .then(setTimeout(()=>reply.delete(), 15000));
