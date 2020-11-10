@@ -60,7 +60,7 @@ async function sendapply(message, args, Discord, userApplyList){
                                                 });
                                                 collector.on('end', async (collected, reason) => {
                                                     if(reason === "yes"){
-                                                        let dmOpen;
+                                                        let dmOpen = true;
                                                         let applicationSend = message.guild.channels.cache.get(process.env.APPLYSEND_CHANNEL_ID);
 
                                                         const whatYouSaid = new Discord.MessageEmbed()
@@ -69,12 +69,14 @@ async function sendapply(message, args, Discord, userApplyList){
                                                             .setDescription(`**Applicant Nitrotype Profile Link:** ${args[1]}\n**Applicant Accuracy:** ${args[2]}\n**Applicant WPM:** ${args[3]}`)
                                                             .setFooter(`Your application is waiting for one of the officers or captain to approve/reject. If there was an error in your application, please contact one of the online officers or captain`)
                                                             .setTimestamp(message.createdAt);
-                                                        message.guild.members.cache.get(author.id).send(whatYouSaid)
+
+                                                        const dmSend = await message.guild.members.cache.get(author.id).send(whatYouSaid)
                                                             .catch(async() => {
-                                                                const reply = await message.reply("Your application was not recorded since your dms are not open. Please open your dms and try again.")
-                                                                    .then(setTimeout(() => reply.delete(), 20000));
-                                                                dmOpen = false;
+                                                                const reply = await message.reply("Your application was not recorded since your dms are not open. Please open your dms and try again.").then(setTimeout(() => reply.delete(), 20000));
                                                             });
+                                                        if(dmSend === undefined){
+                                                            dmOpen = false;
+                                                        }
                                                         if(dmOpen){
                                                             const appid = await applicationSend.send(`_ _`);
     
