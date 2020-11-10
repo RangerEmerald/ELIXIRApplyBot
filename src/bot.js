@@ -52,7 +52,7 @@ client.on('message', async message => {
             } 
         } else if(message.channel.id === process.env.APPLYSEND_CHANNEL_ID || message.channel.id === process.env.QUESTION_CHANNEL){
             message.delete();
-            const reply = await message.reply("Please do not talk here! This is only for accepting or rejecting applications or answering question! Go to #officer-chat for discussions!")
+            const reply = await message.reply(`Please do not talk here! This is only for accepting or rejecting applications or answering question! Go to <#${process.env.OFFICER_CHANNEL_ID}> for discussions!`)
                 .then(setTimeout(() => reply.delete(), 20000));
         }
     } catch(err) {
