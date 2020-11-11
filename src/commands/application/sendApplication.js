@@ -67,7 +67,7 @@ async function sendapply(message, args, Discord, userApplyList){
                                                             .setColor("ORANGE")
                                                             .setTitle("What Your Application to Join ELIXIR Said")
                                                             .setDescription(`**Applicant Nitrotype Profile Link:** ${args[1]}\n**Applicant Accuracy:** ${args[2]}\n**Applicant WPM:** ${args[3]}`)
-                                                            .setFooter(`Your application is waiting for one of the officers or captain to approve/reject. If there was an error in your application, please contact one of the online officers or captain`)
+                                                            .setFooter(`Your application is waiting for one of the officers or captain to approve/reject. If there was an error in your application or have a question, please contact one of the online officers or captain via \`elixir.question [question]\` or directly dming them.`)
                                                             .setTimestamp(message.createdAt);
 
                                                         const dmSend = await message.guild.members.cache.get(author.id).send(whatYouSaid)
