@@ -11,6 +11,7 @@ const answerQuestion = require('./commands/misc/answerQuestion.js');
 const prefix = process.env.BOT_PREFIX;
 
 let userApplyList = {};
+let answerQuestionList = {};
 
 const clientActivity = ['For someone to apply', 'For the prefix: elixir.'];
 let clientActivityNumber = 0;
@@ -46,11 +47,11 @@ client.on('message', async message => {
             if(message.channel.id === process.env.APPLYSEND_CHANNEL_ID){
                 reviewApplication.reviewapply(message, args, Discord, prefix);
             } else if(message.channel.id === process.env.QUESTION_CHANNEL){
-                answerQuestion.aswQuestion(args, message, Discord);
+                answerQuestion.aswQuestion(args, message, Discord, answerQuestionList);
             } else if(message.channel.type === "dm"){
                 question.askQuestion(message, args, Discord, client);
             } 
-        } else if(message.channel.id === process.env.APPLYSEND_CHANNEL_ID || message.channel.id === process.env.QUESTION_CHANNEL){
+        } else if((message.channel.id === process.env.APPLYSEND_CHANNEL_ID || message.channel.id === process.env.QUESTION_CHANNEL) && !answerQuestionList[message.author.id]){
             message.delete();
             const reply = await message.reply(`Please do not talk here! This is only for accepting or rejecting applications or answering question! Go to <#${process.env.OFFICER_CHANNEL_ID}> for discussions!`)
                 .then(setTimeout(() => reply.delete(), 20000));
