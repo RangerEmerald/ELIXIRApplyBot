@@ -80,21 +80,39 @@ async function sendapply(message, args, Discord, userApplyList, client){
                                                         }
                                                         if(dmOpen){
                                                             if(args[2] < 96 || args[3] < 60){
-                                                                if(args[3] < 60){
-                                                                    sendAuthorDM.senddm(author.id, "reject", client.user.tag, message, "N/A Auto Reject", Discord, `WPM is too low. The minimun WPM is in <#${process.env.INFORMATION_CHANNEL}> as with other information.`);
-                                                                } else if(args[2] < 96){
-                                                                    sendAuthorDM.senddm(author.id, "reject", client.user.tag, message, "N/A Auto Reject", Discord, `Accuracy is too low. The minimun accuracy is in <#${process.env.INFORMATION_CHANNEL}> as with other information.`);
-                                                                } else {
+                                                                const applyEmbed = new Discord.MessageEmbed()
+                                                                    .setColor("RED")
+                                                                    .setAuthor(author.user.tag, message.author.avatarURL())
+                                                                    .setTitle(`Application Sent By: ${author.id}\nApplication ID: N/A Auto Reject`)
+                                                                    .setFooter(`**Applicant Nitrotype Profile Link:** ${args[1]}\n**Applicant Accuracy:** ${args[2]}\n**Applicant WPM:** ${args[3]}`)
+                                                                    .setTimestamp(message.createdAt);
+
+                                                                if(args[3] < 60 && args[2] < 96){
                                                                     sendAuthorDM.senddm(author.id, "reject", client.user.tag, message, "N/A Auto Reject", Discord, `Accuracy and WPM are too low. The minimun accuracy and WPM are in <#${process.env.INFORMATION_CHANNEL}> as with other information.`);
-                                                                }
+                                                                    applyEmbed.setDescription(`**Reason:** Accuracy and WPM are too low.`);
+                                                                } else if(args[3] < 60){
+                                                                    sendAuthorDM.senddm(author.id, "reject", client.user.tag, message, "N/A Auto Reject", Discord, `WPM is too low. The minimun WPM is in <#${process.env.INFORMATION_CHANNEL}> as with other information.`);
+                                                                    applyEmbed.setDescription(`**Reason:** WPM is too low.`);
+                                                                } else {
+                                                                    sendAuthorDM.senddm(author.id, "reject", client.user.tag, message, "N/A Auto Reject", Discord, `Accuracy is too low. The minimun accuracy is in <#${process.env.INFORMATION_CHANNEL}> as with other information.`);
+                                                                    applyEmbed.setDescription(`**Reason:** Accuracy is too low.`);
+                                                                } 
                                                                 const reply = await message.reply(`Your application has been auto rejected. Please check your dms for more information. If you have any question, DM <@!${client.user.id}>. The format for asking a question is: \`elixir.question [question]\``)
                                                                     .then(setTimeout(() => reply.delete(), 60000));
+
+                                                                let role = message.guild.roles.cache.find(r => r.name.toLowerCase() === process.env.APPLICATION_ROLE);
+                                                                let roler = message.guild.roles.cache.find(r => r.name.toLowerCase() === process.env.APPLICATION_REJECTED);
+                                                                if(role && roler && author){
+                                                                    author.roles.add(roler);
+                                                                    author.roles.remove(role);
+                                                                }
+                                                                applicationSend.send(applyEmbed);
                                                             } else {
                                                                 const appid = await applicationSend.send(`_ _`);
         
                                                                 const secondEmbed = new Discord.MessageEmbed()
                                                                     .setColor("ORANGE")
-                                                                    .setAuthor(author.tag)
+                                                                    .setAuthor(author.user.tag, message.author.avatarURL())
                                                                     .setTitle(`New Application Sent By: ${author.tag}\nApplication ID: ${appid.id}`)
                                                                     .setDescription(`**Applicant Nitrotype Profile Link:** ${args[1]}\n**Applicant Accuracy:** ${args[2]}\n**Applicant WPM:** ${args[3]}`)
                                                                     .addField(`Is Application Accepted:`, `Application Pending Review`, true)
