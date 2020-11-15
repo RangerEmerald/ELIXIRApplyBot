@@ -1,11 +1,11 @@
 require('dotenv').config();
 
-async function senddm(authorID, accrejt, sender, message, args, Discord, reason){
+async function senddm(authorID, accrejt, sender, message, id, Discord, reason){
     let consoles = message.guild.channels.cache.get(process.env.OFFICER_CHANNEL_ID);
 
     const dmEmbed = new Discord.MessageEmbed()
-        .setTitle(`Your application to join ELIXIR was ${accrejt}ed by ${sender}`)
-        .setFooter(`Application ID: ${args[1]}`)
+        .setTitle(`Your application to join ELIXIR was ${accrejt}ed by ${sender}\nApplication ID: ${id}`)
+        .setFooter(`If there is an error, please contact the officers or captain via elixir.question [question]`)
         .setTimestamp(message.createdAt);
 
     if(accrejt === "accept"){

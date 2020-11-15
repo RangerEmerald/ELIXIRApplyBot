@@ -50,7 +50,7 @@ async function reviewapply(message, args, Discord, prefix){
 
                             application.edit(applicationEmbed);
                             message.delete();
-                            sendAuthorDM.senddm(authorID, accrejt, message.author.tag, message, args, Discord, reason);
+                            sendAuthorDM.senddm(authorID, accrejt, message.author.tag, message, args[1], Discord, reason);
                             const reply = await message.reply(`You have ${accrejt}ed Application #${args[1]}`)
                                 .then(setTimeout(() => {reply.delete();}, 10000));
                         } else {
