@@ -18,9 +18,30 @@ async function askQuestion(message, args, Discord, client){
                         .setFooter(`Author ID: ${message.author.id}`)
                         .setTimestamp(message.createdAt);
 
-                    qId.edit(embedQuestion);
-                    const reply = await message.channel.send("Your question has been recorded. Please wait for the officers or captain to answer your question")
-                        .then(setTimeout(()=>reply.delete(), 20000));
+                    const ask = await message.channel.send(`Are you sure you want to ask: \`${question}\`. Type \`yes\` to continue. Type \`no\` to stop.`);
+                    const collector = new Discord.MessageCollector(message.channel, m => m.author.id === message.author.id, { time: 30000 });
+                    collector.on('collect', async message => {
+                        if(message.content.toLowerCase() === "yes"){
+                            collector.stop("yes");
+                        } else if(message.content.toLowerCase() === "no"){
+                            collector.stop("no");
+                        } else {
+                            const reply = await message.reply("Please reply with only `yes` or `no`!")
+                                .then(setTimeout(() => reply.delete(), 20000));
+                        }
+                    });
+                    collector.on('end', async (collected, reason) => {
+                        if(reason === "yes"){
+                            qId.edit(embedQuestion);
+                            const reply = await message.channel.send("Your question has been recorded. Please wait for the officers or captain to answer your question")
+                                .then(setTimeout(()=>reply.delete(), 20000));
+                        } else {
+                            const stopMessage = await message.channel.send("Question asking stopped.")
+                                .then(setTimeout(() => stopMessage.delete(), 30000));
+                            qId.delete();
+                        }
+                        ask.delete();
+                    });
                 } else {
                     const reply = await message.channel.send("You need to provide a question to ask! The format for asking a question is: `elixir.question [question]`")
                         .then(setTimeout(()=>reply.delete(), 15000));
