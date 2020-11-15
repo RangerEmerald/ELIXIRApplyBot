@@ -1,4 +1,5 @@
 require('dotenv').config();
+const sendAuthorDM = require('./sendAuthorDM');
 
 function validURL(string) {
     let url;
@@ -18,7 +19,7 @@ async function sendDelete(messages, message){
         .then(setTimeout(()=>{reply.delete();}, 10000));
 }
 
-async function sendapply(message, args, Discord, userApplyList){
+async function sendapply(message, args, Discord, userApplyList, client){
     try{
         if(args[0] === "apply"){
             if(args[1]){
@@ -78,25 +79,37 @@ async function sendapply(message, args, Discord, userApplyList){
                                                             dmOpen = false;
                                                         }
                                                         if(dmOpen){
-                                                            const appid = await applicationSend.send(`_ _`);
-    
-                                                            const secondEmbed = new Discord.MessageEmbed()
-                                                                .setColor("ORANGE")
-                                                                .setAuthor(message.author.tag)
-                                                                .setTitle(`New Application Sent By: ${message.author.tag}\nApplication ID: ${appid.id}`)
-                                                                .setDescription(`**Applicant Nitrotype Profile Link:** ${args[1]}\n**Applicant Accuracy:** ${args[2]}\n**Applicant WPM:** ${args[3]}`)
-                                                                .addField(`Is Application Accepted:`, `Application Pending Review`, true)
-                                                                .setFooter(`Author ID: ${message.author.id}`)
-                                                                .setTimestamp(message.createdAt);
+                                                            if(args[2] < 96 || args[3] < 60){
+                                                                if(args[3] < 60){
+                                                                    sendAuthorDM.senddm(author.id, "reject", client.user.tag, message, "N/A Auto Reject", Discord, `WPM is too low. The minimun WPM is in <#${process.env.INFORMATION_CHANNEL}> as with other information.`);
+                                                                } else if(args[2] < 96){
+                                                                    sendAuthorDM.senddm(author.id, "reject", client.user.tag, message, "N/A Auto Reject", Discord, `Accuracy is too low. The minimun accuracy is in <#${process.env.INFORMATION_CHANNEL}> as with other information.`);
+                                                                } else {
+                                                                    sendAuthorDM.senddm(author.id, "reject", client.user.tag, message, "N/A Auto Reject", Discord, `Accuracy and WPM are too low. The minimun accuracy and WPM are in <#${process.env.INFORMATION_CHANNEL}> as with other information.`);
+                                                                }
+                                                                const reply = await message.reply(`Your application has been auto rejected. Please check your dms for more information. If you have any question, DM <@!${client.user.id}>. The format for asking a question is: \`elixir.question [question]\``)
+                                                                    .then(setTimeout(() => reply.delete(), 60000));
+                                                            } else {
+                                                                const appid = await applicationSend.send(`_ _`);
+        
+                                                                const secondEmbed = new Discord.MessageEmbed()
+                                                                    .setColor("ORANGE")
+                                                                    .setAuthor(author.tag)
+                                                                    .setTitle(`New Application Sent By: ${author.tag}\nApplication ID: ${appid.id}`)
+                                                                    .setDescription(`**Applicant Nitrotype Profile Link:** ${args[1]}\n**Applicant Accuracy:** ${args[2]}\n**Applicant WPM:** ${args[3]}`)
+                                                                    .addField(`Is Application Accepted:`, `Application Pending Review`, true)
+                                                                    .setFooter(`Author ID: ${author.id}`)
+                                                                    .setTimestamp(message.createdAt);
 
-                                                            appid.edit(secondEmbed);
-                                                            const reply = await message.reply("Your application has been recorded. Please be patient as the officers review your application. Make sure that your DMs are open so that you can be informed when your application has been accpeted or rejected. Also, if you have any question, DM <@!772601531476213791>. The format for asking a question is: `elixir.question [question]`")
-                                                                .then(setTimeout(()=>{reply.delete();}, 60000));
-                                                            let role2 = message.guild.roles.cache.find(r => r.name.toLowerCase() === process.env.JUST_JOINED);
-                                                            let role = message.guild.roles.cache.find(r => r.name.toLowerCase() === process.env.APPLICATION_ROLE);
-                                                            if(role) author.roles.add(role);
-                                                            if(role2) author.roles.remove(role2);
-                                                            else console.log(`Could not find ${process.env.APPLICATION_ROLE}`);
+                                                                appid.edit(secondEmbed);
+                                                                const reply = await message.reply(`Your application has been recorded. Please be patient as the officers review your application. If you have any question, DM <@!${client.user.id}>. The format for asking a question is: \`elixir.question [question]\``)
+                                                                    .then(setTimeout(()=>{reply.delete();}, 60000));
+                                                                let role2 = message.guild.roles.cache.find(r => r.name.toLowerCase() === process.env.JUST_JOINED);
+                                                                let role = message.guild.roles.cache.find(r => r.name.toLowerCase() === process.env.APPLICATION_ROLE);
+                                                                if(role) author.roles.add(role);
+                                                                if(role2) author.roles.remove(role2);
+                                                                else console.log(`Could not find ${process.env.APPLICATION_ROLE}`);
+                                                            }
                                                         }
                                                     } else if(reason === "else" || reason === "time"){
                                                         const sendmessage = await message.channel.send("Application Stopped")
