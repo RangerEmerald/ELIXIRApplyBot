@@ -35,7 +35,7 @@ client.on('message', async message => {
         let args = message.content.toLowerCase().slice(prefix.length).split(" ");
         if(message.channel.id === process.env.APPLY_CHANNEL_ID){
             if(message.content.toLowerCase().startsWith(prefix)){
-                sendApplication.sendapply(message, args, Discord, userApplyList);
+                sendApplication.sendapply(message, args, Discord, userApplyList, client);
             } else if(message.member.roles.cache.find(r => r.name.toLowerCase() === "officer") || message.member.roles.cache.find(r => r.name.toLowerCase() === "captain")) setTimeout(()=>{message.delete();}, 60000);
             else if(!userApplyList[message.author.id]){
                 message.delete();
