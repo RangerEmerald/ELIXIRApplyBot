@@ -114,8 +114,10 @@ async function sendapply(message, args, Discord, userApplyList, client){
                                                                     .setColor("ORANGE")
                                                                     .setAuthor(author.user.tag, message.author.avatarURL())
                                                                     .setTitle(`New Application Sent By: ${author.id}\nApplication ID: ${appid.id}`)
-                                                                    .setDescription(`**Applicant Nitrotype Profile Link:** ${args[1]}\n**Applicant Accuracy:** ${args[2]}\n**Applicant WPM:** ${args[3]}`)
-                                                                    .addField(`Is Application Accepted:`, `Application Pending Review`, true)
+                                                                    .addField(`Applicant Nitrotype Profile Link`, args[1], true)
+                                                                    .addField(`Applicant Accuracy`, args[2], true)
+                                                                    .addField(`Applicant WPM`, args[3], true)
+                                                                    .setDescription(`Application Pending Review`)
                                                                     .setFooter(`Author ID: ${author.id}`)
                                                                     .setTimestamp(message.createdAt);
 

@@ -18,9 +18,13 @@ async function reviewapply(message, args, Discord, prefix){
                     } else {
                         if(application.embeds[0].author !== null){
                             let authorID = application.embeds[0].footer.text.slice(11);
+                            let author = message.guild.members.cache.get(authorID);
                             const applicationEmbed = new Discord.MessageEmbed()
+                                .setAuthor(author.user.tag, author.user.avatarURL())
                                 .setTitle(`Application Sent By: ${application.embeds[0].author.name}\nApplication ID: ${args[1]}`)
-                                .setFooter(application.embeds[0].description)
+                                .addField(application.embeds[0].fields[0].name, application.embeds[0].fields[0].value, true)
+                                .addField(application.embeds[0].fields[1].name, application.embeds[0].fields[1].value, true)
+                                .addField(application.embeds[0].fields[2].name, application.embeds[0].fields[2].value, true)
                                 .setTimestamp(application.embeds[0].timestamp);
 
                             const reason = message.content.slice(prefix.length).split(" ").splice(3).join(" ");
@@ -31,7 +35,6 @@ async function reviewapply(message, args, Discord, prefix){
                                 applicationEmbed.setDescription(`**Application ${accrejt}ed by <@!${message.author.id}>**`);
                             }
                             let role = message.guild.roles.cache.find(r => r.name.toLowerCase() === process.env.APPLICATION_ROLE);
-                            let author = message.guild.members.cache.get(authorID);
                             if(accrejt === "accept"){
                                 let rolea = message.guild.roles.cache.find(r => r.name.toLowerCase() === process.env.APPLICATION_APPROVED);
                                 if(role && rolea && author){
@@ -49,8 +52,8 @@ async function reviewapply(message, args, Discord, prefix){
                             }
 
                             application.edit(applicationEmbed);
+                            sendAuthorDM.senddm(authorID, accrejt, message.author.tag, message, applicationEmbed);
                             message.delete();
-                            sendAuthorDM.senddm(authorID, accrejt, message.author.tag, message, args[1], Discord, reason);
                             const reply = await message.reply(`You have ${accrejt}ed Application #${args[1]}`)
                                 .then(setTimeout(() => {reply.delete();}, 10000));
                         } else {
