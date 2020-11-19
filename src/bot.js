@@ -5,8 +5,8 @@ const client = new Discord.Client({partials:["MESSAGE"]});
 const sendApplication = require('./commands/application/sendApplication.js');
 const reviewApplication = require('./commands/application/reviewApplication.js');
 
-const question = require('./commands/misc/question.js');
-const answerQuestion = require('./commands/misc/answerQuestion.js');
+const question = require('./commands/question/question.js');
+const answerQuestion = require('./commands/question/answerQuestion.js');
 
 const prefix = process.env.BOT_PREFIX;
 
