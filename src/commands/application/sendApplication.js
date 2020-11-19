@@ -34,6 +34,7 @@ async function sendapply(message, args, Discord, userApplyList, client){
                                     if(!isNaN(args[2])){
                                         if(args[3]){
                                             if(!isNaN(args[3])){
+                                                if(userApplyList[message.author.id] && message.content.toLowerCase().startsWith(process.env.BOT_PREFIX)) return;
                                                 userApplyList[message.author.id] = true;
                                                 message.delete();
                                                 const isCorrectEmbed = new Discord.MessageEmbed()
@@ -113,7 +114,7 @@ async function sendapply(message, args, Discord, userApplyList, client){
                                                                 const secondEmbed = new Discord.MessageEmbed()
                                                                     .setColor("ORANGE")
                                                                     .setAuthor(author.user.tag, message.author.avatarURL())
-                                                                    .setTitle(`New Application Sent By: ${author.id}\nApplication ID: ${appid.id}`)
+                                                                    .setTitle(`New Application Sent By: ${author.user.tag}\nApplication ID: ${appid.id}`)
                                                                     .addField(`Applicant Nitrotype Profile Link`, args[1], true)
                                                                     .addField(`Applicant Accuracy`, args[2], true)
                                                                     .addField(`Applicant WPM`, args[3], true)

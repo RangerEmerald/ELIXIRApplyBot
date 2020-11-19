@@ -14,6 +14,7 @@ async function aswQuestion(args, message, Discord, answerQuestionList){
                     const answer = message.content.slice(process.env.BOT_PREFIX.length).split(" ").splice(2).join(" ")
                     if(answer){
                         if(question.embeds[0].author !== null){
+                            if(message.content.toLowerCase().startsWith(process.env.BOT_PREFIX) && answerQuestionList[message.author.id]) return;
                             answerQuestionList[message.author.id] = true;
                             let authorID = question.embeds[0].footer.text.slice(11);
                             const answerEmbed = new Discord.MessageEmbed()

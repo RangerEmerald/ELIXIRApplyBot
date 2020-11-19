@@ -1,5 +1,7 @@
 require('dotenv').config();
 
+let isQuestion = {};
+
 async function askQuestion(message, args, Discord, client){
     try{
         if(args[0] === "question"){
@@ -7,6 +9,8 @@ async function askQuestion(message, args, Discord, client){
             if(questionChannel){
                 const question = message.content.slice(process.env.BOT_PREFIX.length + args[0].length);
                 if(question){
+                    if(message.content.toLowerCase().startsWith(process.env.BOT_PREFIX) && isQuestion[message.author.id]) return;
+                    isQuestion[message.author.id] = true;
                     const qId = await questionChannel.send(`_ _`);
 
                     const embedQuestion = new Discord.MessageEmbed()
@@ -41,6 +45,7 @@ async function askQuestion(message, args, Discord, client){
                             qId.delete();
                         }
                         ask.delete();
+                        delete isQuestion[message.author.id];
                     });
                 } else {
                     const reply = await message.channel.send("You need to provide a question to ask! The format for asking a question is: `elixir.question [question]`")
