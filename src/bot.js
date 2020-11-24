@@ -8,6 +8,9 @@ const reviewApplication = require('./commands/application/reviewApplication.js')
 const question = require('./commands/question/question.js');
 const answerQuestion = require('./commands/question/answerQuestion.js');
 
+const timeout = require('./commands/moderation/timeout_limitcommand.js');
+const checkUser = require('./commands/moderation/checkUserTimeout.js');
+
 const prefix = process.env.BOT_PREFIX;
 
 let userApplyList = {};
@@ -40,18 +43,21 @@ client.on('message', async message => {
                 sendApplication.sendapply(message, args, Discord, userApplyList, client);
             } else if(message.member.roles.cache.find(r => r.name.toLowerCase() === "officer") || message.member.roles.cache.find(r => r.name.toLowerCase() === "captain")) setTimeout(()=>{message.delete();}, 60000);
             else if(!userApplyList[message.author.id]){
-                message.delete();
+                await message.delete();
                 const reply = await message.reply("Please do not talk here! To apply, do `elixir.apply [your nitrotype profile link] [nitrotype accuracy] [nitrotype wpm]`!")
                     .then(setTimeout(()=>{reply.delete();}, 5000))
+                timeout.limitcommandusage(message, Discord);
             }
         } else if(message.content.toLowerCase().startsWith(prefix)){ 
             if(message.channel.id === process.env.APPLYSEND_CHANNEL_ID){
                 reviewApplication.reviewapply(message, args, Discord, prefix, revApplicationList);
+            } else if(message.channel.id === process.env.BOT_CHANNEL){
+                checkUser.checkTimeout(message, args, Discord);
             } else if(message.channel.id === process.env.QUESTION_CHANNEL){
                 answerQuestion.aswQuestion(args, message, Discord, answerQuestionList);
             } else if(message.channel.type === "dm"){
                 question.askQuestion(message, args, Discord, client);
-            } 
+            }
         } else if((message.channel.id === process.env.APPLYSEND_CHANNEL_ID || message.channel.id === process.env.QUESTION_CHANNEL) && !answerQuestionList[message.author.id] && !revApplicationList[message.author.id]){
             message.delete();
             const reply = await message.reply(`Please do not talk here! This is only for accepting or rejecting applications or answering question! Go to <#${process.env.OFFICER_CHANNEL_ID}> for discussions!`)

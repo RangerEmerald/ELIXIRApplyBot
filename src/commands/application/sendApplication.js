@@ -1,6 +1,8 @@
 require('dotenv').config();
 const sendAuthorDM = require('./sendAuthorDM');
 
+const timeout = require('../moderation/timeout_limitcommand.js');
+
 function validURL(string) {
     let url;
 
@@ -13,10 +15,11 @@ function validURL(string) {
     return url.protocol === "http:" || url.protocol === "https:";
 }
 
-async function sendDelete(messages, message){
-    message.delete();
+async function sendDelete(messages, message, Discord){
+    await message.delete();
     const reply = await message.reply(messages)
         .then(setTimeout(()=>{reply.delete();}, 10000));
+    timeout.limitcommandusage(message, Discord);
 }
 
 async function sendapply(message, args, Discord, userApplyList, client){
@@ -140,34 +143,34 @@ async function sendapply(message, args, Discord, userApplyList, client){
                                                     delete userApplyList[author.id];
                                                 });
                                             } else {
-                                                sendDelete("Make sure your WPM only consists of numbers! Do not add any extra characters at the end of your WPM!", message);
+                                                sendDelete("Make sure your WPM only consists of numbers! Do not add any extra characters at the end of your WPM!", message, Discord);
                                             }
                                         } else {
-                                            sendDelete("Make sure you include your WPM! The format of the application is: `elixir.apply [your nitrotype profile link] [nitrotype accuracy] [nitrotype wpm]`!", message);
+                                            sendDelete("Make sure you include your WPM! The format of the application is: `elixir.apply [your nitrotype profile link] [nitrotype accuracy] [nitrotype wpm]`!", message, Discord);
                                         }
                                     } else {
-                                        sendDelete("Make sure your accuracy only consists of numbers! Do not add any extra characters at the end of your accuracy!", message);
+                                        sendDelete("Make sure your accuracy only consists of numbers! Do not add any extra characters at the end of your accuracy!", message, Discord);
                                     }
                                 } else {
-                                    sendDelete("Make sure you include your accuracy! The format of the application is: `elixir.apply [your nitrotype profile link] [nitrotype accuracy] [nitrotype wpm]`!", message);
+                                    sendDelete("Make sure you include your accuracy! The format of the application is: `elixir.apply [your nitrotype profile link] [nitrotype accuracy] [nitrotype wpm]`!", message, Discord);
                                 }
                             } else {
-                                sendDelete(`${args[1]} is not your nitrotype profile link! To get your NT profile, look to the top right and find the dropdown menu. Scroll over it, and tap my public profile. The URL at the top is what you should put in here.`, message);
+                                sendDelete(`${args[1]} is not your nitrotype profile link! To get your NT profile, look to the top right and find the dropdown menu. Scroll over it, and tap my public profile. The URL at the top is what you should put in here.`, message, Discord);
                             }
                         } else {
-                            sendDelete(`${args[1]} is not nitrotype! To get your NT profile, go to https://www.nitrotype.com. look to the top right and find the dropdown menu. Scroll over it, and tap my public profile. The URL at the top is what you should put in here.`, message);
+                            sendDelete(`${args[1]} is not nitrotype! To get your NT profile, go to https://www.nitrotype.com. look to the top right and find the dropdown menu. Scroll over it, and tap my public profile. The URL at the top is what you should put in here.`, message, Discord);
                         }
                     } else {
-                        sendDelete(`${args[1]} is not nitrotype! To get your NT profile, go to https://www.nitrotype.com. look to the top right and find the dropdown menu. Scroll over it, and tap my public profile. The URL at the top is what you should put in here.`, message);
+                        sendDelete(`${args[1]} is not nitrotype! To get your NT profile, go to https://www.nitrotype.com. look to the top right and find the dropdown menu. Scroll over it, and tap my public profile. The URL at the top is what you should put in here.`, message, Discord);
                     }
                 } else {
-                    sendDelete(`${args[1]} is not a valid URL! To get your NT profile, look to the top right and find the dropdown menu. Scroll over it, and tap my public profile. The URL at the top is what you should put in here.`, message);
+                    sendDelete(`${args[1]} is not a valid URL! To get your NT profile, look to the top right and find the dropdown menu. Scroll over it, and tap my public profile. The URL at the top is what you should put in here.`, message, Discord);
                 }
             } else {
-                sendDelete("Your application is not complete! Did you mean to do: `elixir.apply [your nitrotype profile link] [nitrotype accuracy] [nitrotype wpm]`?", message);
+                sendDelete("Your application is not complete! Did you mean to do: `elixir.apply [your nitrotype profile link] [nitrotype accuracy] [nitrotype wpm]`?", message, Discord);
             }
         } else {
-            sendDelete("That is not a command! Did you mean to do: `elixir.apply [your nitrotype profile link] [nitrotype accuracy] [nitrotype wpm]`?", message);
+            sendDelete("That is not a command! Did you mean to do: `elixir.apply [your nitrotype profile link] [nitrotype accuracy] [nitrotype wpm]`?", message, Discord);
         }
     } catch(err){
         console.log(err);
