@@ -38,7 +38,7 @@ async function reviewapply(message, args, Discord, prefix, revApplicationList){
                                 applicationEmbed.setDescription(`**Application ${accrejt}ed by <@!${message.author.id}>**`);
                             }
                             message.delete();
-                            const askQuestion = await message.reply(`Are you sue you want to ${accrejt} the application sent by ${author.user.tag} at application ${args[1]} because \`${reason}\`? Type \`yes\` to continue. Type \`no\` to stop.`);
+                            const askQuestion = await message.reply(`Are you sure you want to ${accrejt} the application sent by ${author.user.tag} at application ${args[1]} because \`${reason}\`? Type \`yes\` to continue. Type \`no\` to stop.`);
                             const collector = new Discord.MessageCollector(message.channel, m => m.author.id === message.author.id, { time: 30000 });
                             collector.on('collect', async message => {
                                 if(message.content.toLowerCase() === "yes"){
