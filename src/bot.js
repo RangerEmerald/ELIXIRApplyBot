@@ -41,7 +41,7 @@ client.on('message', async message => {
         if(message.channel.id === process.env.APPLY_CHANNEL_ID){
             if(message.content.toLowerCase().startsWith(prefix)){
                 sendApplication.sendapply(message, args, Discord, userApplyList, client);
-            } else if(message.member.roles.cache.find(r => r.name.toLowerCase() === "officer") || message.member.roles.cache.find(r => r.name.toLowerCase() === "captain")) setTimeout(()=>{message.delete();}, 60000);
+            } else if(message.member.roles.cache.find(r => r.name.toLowerCase() === "officer") || message.member.roles.cache.find(r => r.name.toLowerCase() === "captain")) return;
             else if(!userApplyList[message.author.id]){
                 await message.delete();
                 const reply = await message.reply("Please do not talk here! To apply, do `elixir.apply [your nitrotype profile link] [nitrotype accuracy] [nitrotype wpm]`!")
@@ -61,7 +61,8 @@ client.on('message', async message => {
         } else if((message.channel.id === process.env.APPLYSEND_CHANNEL_ID || message.channel.id === process.env.QUESTION_CHANNEL) && !answerQuestionList[message.author.id] && !revApplicationList[message.author.id]){
             message.delete();
             const reply = await message.reply(`Please do not talk here! This is only for accepting or rejecting applications or answering question! Go to <#${process.env.OFFICER_CHANNEL_ID}> for discussions!`)
-                .then(setTimeout(() => reply.delete(), 20000));
+                .then(setTimeout(() => reply.delete(), 20000))
+                .catch(console.log("Unknon message"));
         }
     } catch(err) {
         console.log(err);
