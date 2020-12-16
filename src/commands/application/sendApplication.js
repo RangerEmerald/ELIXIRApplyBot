@@ -84,27 +84,31 @@ async function sendapply(message, args, Discord, userApplyList, client){
                                                         }
                                                         if(dmOpen){
                                                             if(args[2] < 96 || args[3] < 60){
+                                                                dmSend.delete();
                                                                 const applyEmbed = new Discord.MessageEmbed()
                                                                     .setColor("RED")
                                                                     .setAuthor(author.user.tag, message.author.avatarURL())
                                                                     .setTitle(`Application Sent By: ${author.id}\nApplication ID: N/A Auto Reject`)
-                                                                    .setFooter(`**Applicant Nitrotype Profile Link:** ${args[1]}\n**Applicant Accuracy:** ${args[2]}\n**Applicant WPM:** ${args[3]}`)
+                                                                    .setTitle(`New Application Sent By: ${author.user.tag}\nApplication ID: N/A`)
+                                                                    .addField(`Applicant Nitrotype Profile Link`, args[1], true)
+                                                                    .addField(`Applicant Accuracy`, args[2], true)
+                                                                    .addField(`Applicant WPM`, args[3], true)
                                                                     .setTimestamp(message.createdAt);
 
                                                                 if(args[3] < 60 && args[2] < 96){
-                                                                    sendAuthorDM.senddm(author.id, "reject", client.user.tag, message, "N/A Auto Reject", Discord, `Accuracy and WPM are too low. The minimun accuracy and WPM are in <#${process.env.INFORMATION_CHANNEL}> as with other information.`);
-                                                                    applyEmbed.setDescription(`**Reason:** Accuracy and WPM are too low.`);
+                                                                    applyEmbed.setDescription(`**Application rejected by the Auto Rejection System**\n**Reason:** Accuracy and WPM are too low. The minimun accuracy and WPM are in <#${process.env.INFORMATION_CHANNEL}> as with other information.`);
+                                                                    sendAuthorDM.senddm(author.id, "reject", client.user.tag, message, applyEmbed);
                                                                 } else if(args[3] < 60){
-                                                                    sendAuthorDM.senddm(author.id, "reject", client.user.tag, message, "N/A Auto Reject", Discord, `WPM is too low. The minimun WPM is in <#${process.env.INFORMATION_CHANNEL}> as with other information.`);
-                                                                    applyEmbed.setDescription(`**Reason:** WPM is too low.`);
+                                                                    applyEmbed.setDescription(`**Application rejected by the Auto Rejection System**\n**Reason:** WPM is too low. The minimun WPM is in <#${process.env.INFORMATION_CHANNEL}> as with other information.`);
+                                                                    sendAuthorDM.senddm(author.id, "reject", client.user.tag, message, applyEmbed);
                                                                 } else {
-                                                                    sendAuthorDM.senddm(author.id, "reject", client.user.tag, message, "N/A Auto Reject", Discord, `Accuracy is too low. The minimun accuracy is in <#${process.env.INFORMATION_CHANNEL}> as with other information.`);
-                                                                    applyEmbed.setDescription(`**Reason:** Accuracy is too low.`);
+                                                                    applyEmbed.setDescription(`**Application rejected by the Auto Rejection System**\n**Reason:** Accuracy is too low. The minimun accuracy is in <#${process.env.INFORMATION_CHANNEL}> as with other information.`);
+                                                                    sendAuthorDM.senddm(author.id, "reject", client.user.tag, message, applyEmbed);
                                                                 } 
                                                                 const reply = await message.reply(`Your application has been auto rejected. Please check your dms for more information. If you have any question, DM <@!${client.user.id}>. The format for asking a question is: \`elixir.question [question]\``)
                                                                     .then(setTimeout(() => reply.delete(), 60000));
 
-                                                                let role = message.guild.roles.cache.find(r => r.name.toLowerCase() === process.env.APPLICATION_ROLE);
+                                                                let role = message.guild.roles.cache.find(r => r.name.toLowerCase() === process.env.JUST_JOINED);
                                                                 let roler = message.guild.roles.cache.find(r => r.name.toLowerCase() === process.env.APPLICATION_REJECTED);
                                                                 if(role && roler && author){
                                                                     author.roles.add(roler);
