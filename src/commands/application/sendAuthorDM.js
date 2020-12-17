@@ -2,7 +2,7 @@ require('dotenv').config();
 
 async function senddm(authorID, accrejt, sender, message, embed){
     let consoles = message.guild.channels.cache.get(process.env.OFFICER_CHANNEL_ID);
-    embed.setFooter(`If there is an error, please contact the officers or captain via elixir.question [question]`);
+    embed.setFooter(`If there is an error, please contact the officers or captain via elixir.question [question]. Brackets not required.`);
 
     message.guild.members.cache.get(`${authorID}`).send(embed)
         .catch((err) => {

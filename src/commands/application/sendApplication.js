@@ -130,7 +130,7 @@ async function sendapply(message, args, Discord, userApplyList, client){
                                                                     .setTimestamp(message.createdAt);
 
                                                                 appid.edit(secondEmbed);
-                                                                const reply = await message.reply(`Your application has been recorded. Please be patient as the officers review your application. If you have any question, DM <@!${client.user.id}>. The format for asking a question is: \`elixir.question [question]\``)
+                                                                const reply = await message.reply(`Your application has been recorded. Please be patient as the officers review your application. If you have any question, DM <@!${client.user.id}>. The format for asking a question is: \`elixir.question [question]\`. Brackets not required.`)
                                                                     .then(setTimeout(()=>{reply.delete();}, 60000));
                                                                 let role2 = message.guild.roles.cache.find(r => r.name.toLowerCase() === process.env.JUST_JOINED);
                                                                 let role = message.guild.roles.cache.find(r => r.name.toLowerCase() === process.env.APPLICATION_ROLE);
