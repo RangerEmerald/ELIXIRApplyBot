@@ -9,7 +9,7 @@ const question = require('./commands/question/question.js');
 const answerQuestion = require('./commands/question/answerQuestion.js');
 
 const timeout = require('./commands/moderation/timeout_limitcommand.js');
-const checkUser = require('./commands/moderation/checkUserTimeout.js');
+const checkUser = require('./commands/moderation/commandsUserTimeout.js');
 
 const prefix = process.env.BOT_PREFIX;
 
