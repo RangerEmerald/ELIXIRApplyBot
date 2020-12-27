@@ -24,9 +24,13 @@ async function reviewapply(message, args, Discord, prefix, revApplicationList){
                             const applicationEmbed = new Discord.MessageEmbed()
                                 .setAuthor(author.user.tag, author.user.avatarURL())
                                 .setTitle(`Application Sent By: ${application.embeds[0].author.name}\nApplication ID: ${args[1]}`)
-                                .addField(application.embeds[0].fields[0].name, application.embeds[0].fields[0].value, true)
+                                .addField(application.embeds[0].fields[0].name, application.embeds[0].fields[0].value)
                                 .addField(application.embeds[0].fields[1].name, application.embeds[0].fields[1].value, true)
                                 .addField(application.embeds[0].fields[2].name, application.embeds[0].fields[2].value, true)
+                                .addField(application.embeds[0].fields[3].name, application.embeds[0].fields[3].value, true)
+                                .addField(application.embeds[0].fields[4].name, application.embeds[0].fields[4].value, true)
+                                .addField(application.embeds[0].fields[5].name, application.embeds[0].fields[5].value, true)
+                                .addField(application.embeds[0].fields[6].name, application.embeds[0].fields[6].value, true)
                                 .setFooter(application.embeds[0].footer.text)
                                 .setTimestamp(application.embeds[0].timestamp);
 

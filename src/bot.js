@@ -44,10 +44,12 @@ client.on('message', async message => {
             } else if(message.member.roles.cache.find(r => r.name.toLowerCase() === "officer") || message.member.roles.cache.find(r => r.name.toLowerCase() === "captain")) return;
             else if(!userApplyList[message.author.id]){
                 await message.delete();
-                const reply = await message.reply("Please do not talk here! To apply, do `elixir.apply [your nitrotype profile link] [nitrotype accuracy] [nitrotype wpm]`!")
+                const reply = await message.reply("Please do not talk here! To apply, do `elixir.apply [your nitrotype profile link]`!")
                     .then(setTimeout(()=>{reply.delete();}, 5000))
                 timeout.limitcommandusage(message, Discord);
             }
+        } else if(message.channel.id === process.env.RE_APPLY_LOG){
+            message.delete();
         } else if(message.content.toLowerCase().startsWith(prefix)){ 
             if(message.channel.id === process.env.APPLYSEND_CHANNEL_ID){
                 reviewApplication.reviewapply(message, args, Discord, prefix, revApplicationList);
