@@ -108,8 +108,18 @@ function sendapply(message, args, Discord, userApplyList, client){
                         if(dmOpen){
                             const seasonAcc = Math.floor(((racingInfo[0].typed - racingInfo[0].errs)/racingInfo[0].typed)*100);
                             const seasonWpm = Math.floor((racingInfo[0].typed/5)/(Number(racingInfo[0].secs)/60));
-                            const dailyAcc = Math.floor(((racingInfo[1].typed - racingInfo[1].errs)/racingInfo[1].typed)*100);
-                            const dailyWpm = Math.floor((racingInfo[1].typed/5)/(Number(racingInfo[1].secs)/60));
+                            let dailyPlayed;
+                            let dailyAcc;
+                            let dailyWpm;
+                            if(racingInfo[1]){
+                                dailyWpm = Math.floor((racingInfo[1].typed/5)/(Number(racingInfo[1].secs)/60));
+                                dailyAcc = Math.floor(((racingInfo[1].typed - racingInfo[1].errs)/racingInfo[1].typed)*100);
+                                dailyPlayed = racingInfo[1].played;
+                            } else {
+                                dailyWpm = 0;
+                                dailyAcc = 0;
+                                dailyPlayed = 0;
+                            }
                             if(seasonWpm < 60 || seasonAcc < 96){
                                 let reapplytime = message.guild.channels.cache.get(process.env.RE_APPLY_LOG);
                                 dmSend.delete();
@@ -124,7 +134,7 @@ function sendapply(message, args, Discord, userApplyList, client){
                                     .addField(`Total Season Races`, racingInfo[0].played, true)
                                     .addField(`Applicant Daily Accuracy`, dailyAcc, true)
                                     .addField(`Accuracy Daily WPM`, dailyWpm, true)
-                                    .addField(`Daily Races`, racingInfo[1].played, true)
+                                    .addField(`Daily Races`, dailyPlayed, true)
                                     .setTimestamp(message.createdAt);
 
                                 if(seasonWpm < 60 && seasonAcc < 96){
@@ -161,7 +171,7 @@ function sendapply(message, args, Discord, userApplyList, client){
                                     .addField(`Total Season Races`, racingInfo[0].played, true)
                                     .addField(`Applicant Daily Accuracy`, dailyAcc, true)
                                     .addField(`Accuracy Daily WPM`, dailyWpm, true)
-                                    .addField(`Daily Races`, racingInfo[1].played, true)
+                                    .addField(`Daily Races`, dailyPlayed, true)
                                     .setDescription(`Application Pending Review`)
                                     .setFooter(`Author ID: ${author.id}`)
                                     .setTimestamp(message.createdAt);
@@ -171,8 +181,10 @@ function sendapply(message, args, Discord, userApplyList, client){
                                     .then(setTimeout(()=>{reply.delete();}, 60000));
                                 let role2 = message.guild.roles.cache.find(r => r.name.toLowerCase() === process.env.JUST_JOINED);
                                 let role = message.guild.roles.cache.find(r => r.name.toLowerCase() === process.env.APPLICATION_ROLE);
-                                if(role) author.roles.add(role);
-                                if(role2) author.roles.remove(role2);
+                                if(role && role2){
+                                    author.roles.add(role);
+                                    author.roles.remove(role2);
+                                }
                                 else console.log(`Could not find ${process.env.APPLICATION_ROLE}`);
                             }
                         }
