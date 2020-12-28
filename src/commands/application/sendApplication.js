@@ -37,9 +37,13 @@ async function getUserInfo(args, cb){
         res.on('end', () => {
             let patt = new RegExp("\"racingStats.+\]");
             let ress = patt.exec(data);
-            const answer = JSON.parse(ress[0].slice(14));
-            if(answer[0].typed){
-                cb(answer);
+            if(ress){
+                const answer = JSON.parse(ress[0].slice(14));
+                if(answer[0].typed){
+                    cb(answer);
+                } else {
+                    cb(false);
+                }
             } else {
                 cb(false);
             }
