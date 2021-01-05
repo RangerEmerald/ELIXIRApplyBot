@@ -39,7 +39,7 @@ async function getUserInfo(args, cb){
             let ress = patt.exec(data);
             if(ress){
                 const answer = JSON.parse(ress[0].slice(14));
-                if(answer[0].typed){
+                if(answer[0] && answer[0].typed){
                     cb(answer);
                 } else {
                     cb(false);
