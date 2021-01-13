@@ -11,6 +11,8 @@ const answerQuestion = require('./commands/question/answerQuestion.js');
 const timeout = require('./commands/moderation/timeout_limitcommand.js');
 const checkUser = require('./commands/moderation/commandsUserTimeout.js');
 
+const { similarity } = require('./commands/other/similar.js');
+
 const prefix = process.env.BOT_PREFIX;
 
 let userApplyList = {};
@@ -39,9 +41,15 @@ client.on('message', async message => {
         if(message.author.bot) return;
         let args = message.content.toLowerCase().slice(prefix.length).split(" ");
         if(message.channel.id === process.env.APPLY_CHANNEL_ID){
-            if(message.content.toLowerCase().startsWith(prefix)){
+            if(similarity("elixir.apply", message.content.toLowerCase().split(" ")[0]) > 0.8){
                 sendApplication.sendapply(message, args, Discord, userApplyList, client);
-            } else if(message.member.roles.cache.find(r => r.name.toLowerCase() === "officer") || message.member.roles.cache.find(r => r.name.toLowerCase() === "captain")) return;
+            }
+            else if(similarity("elixir.", message.content.toLowerCase().split(" ")[0]) > 0.8) {
+                await message.delete();
+                const reply = await message.reply("That is not a command! To apply, do `elixir.apply [your nitrotype profile link]`!")
+                    .then(setTimeout(()=>{reply.delete();}, 5000))
+                timeout.limitcommandusage(message, Discord);
+            } else if(message.member.roles.cache.find(r => r.name.toLowerCase() === "officer") || message.member.roles.cache.find(r => r.name.toLowerCase() === "captain")) return; 
             else if(!userApplyList[message.author.id]){
                 await message.delete();
                 const reply = await message.reply("Please do not talk here! To apply, do `elixir.apply [your nitrotype profile link]`!")

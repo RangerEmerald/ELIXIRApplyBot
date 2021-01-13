@@ -200,33 +200,29 @@ function sendapply(message, args, Discord, userApplyList, client){
                 delete userApplyList[author.id];
             });                    
         }
-        if(args[0] === "apply"){
-            if(args[1]){
-                if(validURL(args[1])){
-                    let domainName = args[1].slice(12, 21);
-                    if(domainName === "nitrotype"){
-                        let end = args[1].slice(21, 25);
-                        if(end === ".com"){
-                            let seeRacer = args[1].slice(26, 32);
-                            if(seeRacer === "racer/"){
-                                getUserInfo(args, cb);
-                            } else {
-                                sendDelete(`<${args[1]}> is not your nitrotype profile link! To get your NT profile, look to the top right and find the dropdown menu. Scroll over it, and tap my public profile. The URL at the top is what you should put in here.`, message, Discord);
-                            }
+        if(args[1]){
+            if(validURL(args[1])){
+                let domainName = args[1].slice(12, 21);
+                if(domainName === "nitrotype"){
+                    let end = args[1].slice(21, 25);
+                    if(end === ".com"){
+                        let seeRacer = args[1].slice(26, 32);
+                        if(seeRacer === "racer/"){
+                            getUserInfo(args, cb);
                         } else {
-                            sendDelete(`<${args[1]}> is not nitrotype! To get your NT profile, go to https://www.nitrotype.com. look to the top right and find the dropdown menu. Scroll over it, and tap my public profile. The URL at the top is what you should put in here.`, message, Discord);
+                            sendDelete(`<${args[1]}> is not your nitrotype profile link! To get your NT profile, look to the top right and find the dropdown menu. Scroll over it, and tap my public profile. The URL at the top is what you should put in here.`, message, Discord);
                         }
                     } else {
                         sendDelete(`<${args[1]}> is not nitrotype! To get your NT profile, go to https://www.nitrotype.com. look to the top right and find the dropdown menu. Scroll over it, and tap my public profile. The URL at the top is what you should put in here.`, message, Discord);
                     }
                 } else {
-                    sendDelete(`<${args[1]}> is not a valid URL! To get your NT profile, look to the top right and find the dropdown menu. Scroll over it, and tap my public profile. The URL at the top is what you should put in here.`, message, Discord);
+                    sendDelete(`<${args[1]}> is not nitrotype! To get your NT profile, go to https://www.nitrotype.com. look to the top right and find the dropdown menu. Scroll over it, and tap my public profile. The URL at the top is what you should put in here.`, message, Discord);
                 }
             } else {
-                sendDelete("Your application is not complete! Did you mean to do: `elixir.apply [your nitrotype profile link]`?", message, Discord);
+                sendDelete(`<${args[1]}> is not a valid URL! To get your NT profile, look to the top right and find the dropdown menu. Scroll over it, and tap my public profile. The URL at the top is what you should put in here.`, message, Discord);
             }
         } else {
-            sendDelete("That is not a command! Did you mean to do: `elixir.apply [your nitrotype profile link]`?", message, Discord);
+            sendDelete("Your application is not complete! Did you mean to do: `elixir.apply [your nitrotype profile link]`?", message, Discord);
         }
     } catch(err){
         console.log(err);
