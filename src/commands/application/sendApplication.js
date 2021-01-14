@@ -88,109 +88,114 @@ function sendapply(message, args, Discord, userApplyList, client){
             collector.on('end', async (collected, reason) => {
                 if(reason === "yes"){
                     if(racingInfo){
-                        let dmOpen = true;
-                        let applicationSend = message.guild.channels.cache.get(process.env.APPLYSEND_CHANNEL_ID);
+                        if(racingInfo[0].typed >= 20) {
+                            let dmOpen = true;
+                            let applicationSend = message.guild.channels.cache.get(process.env.APPLYSEND_CHANNEL_ID);
 
-                        const whatYouSaid = new Discord.MessageEmbed()
-                            .setColor("ORANGE")
-                            .setTitle("What Your Application to Join ELIXIR Said")
-                            .setDescription(`**Applicant Nitrotype Profile Link:** ${args[1]}`)
-                            .setFooter(`Your application is waiting for one of the officers or captain to approve/reject. If there was an error in your application or have a question, please contact one of the online officers or captain via \`elixir.question [question]\` or directly dming them.`)
-                            .setTimestamp(message.createdAt);
+                            const whatYouSaid = new Discord.MessageEmbed()
+                                .setColor("ORANGE")
+                                .setTitle("What Your Application to Join ELIXIR Said")
+                                .setDescription(`**Applicant Nitrotype Profile Link:** ${args[1]}`)
+                                .setFooter(`Your application is waiting for one of the officers or captain to approve/reject. If there was an error in your application or have a question, please contact one of the online officers or captain via \`elixir.question [question]\` or directly dming them.`)
+                                .setTimestamp(message.createdAt);
 
-                        const dmSend = await message.guild.members.cache.get(author.id).send(whatYouSaid)
-                            .catch(async() => {
-                                const reply = await message.reply("Your application was not recorded since your dms are not open. Please open your dms and try again.").then(setTimeout(() => reply.delete(), 20000));
-                            });
-                        if(dmSend === undefined){
-                            dmOpen = false;
-                        }
-                        if(dmOpen){
-                            const seasonAcc = Math.floor(((racingInfo[0].typed - racingInfo[0].errs)/racingInfo[0].typed)*100);
-                            const seasonWpm = Math.floor((racingInfo[0].typed/5)/(Number(racingInfo[0].secs)/60));
-                            let dailyPlayed;
-                            let dailyAcc;
-                            let dailyWpm;
-                            if(racingInfo[1]){
-                                dailyWpm = Math.floor((racingInfo[1].typed/5)/(Number(racingInfo[1].secs)/60));
-                                dailyAcc = Math.floor(((racingInfo[1].typed - racingInfo[1].errs)/racingInfo[1].typed)*100);
-                                dailyPlayed = racingInfo[1].played;
-                            } else {
-                                dailyWpm = 0;
-                                dailyAcc = 0;
-                                dailyPlayed = 0;
+                            const dmSend = await message.guild.members.cache.get(author.id).send(whatYouSaid)
+                                .catch(async() => {
+                                    const reply = await message.reply("Your application was not recorded since your dms are not open. Please open your dms and try again.").then(setTimeout(() => reply.delete(), 20000));
+                                });
+                            if(dmSend === undefined){
+                                dmOpen = false;
                             }
-                            if(seasonWpm < 60 || seasonAcc < 96){
-                                let reapplytime = message.guild.channels.cache.get(process.env.RE_APPLY_LOG);
-                                dmSend.delete();
-                                const applyEmbed = new Discord.MessageEmbed()
-                                    .setColor("RED")
-                                    .setAuthor(author.user.tag, message.author.avatarURL())
-                                    .setTitle(`Application Sent By: ${author.id}\nApplication ID: N/A Auto Reject`)
-                                    .setTitle(`New Application Sent By: ${author.user.tag}\nApplication ID: N/A`)
-                                    .addField(`Applicant Nitrotype Profile Link`, args[1])
-                                    .addField(`Applicant Season Accuracy`, seasonAcc, true)
-                                    .addField(`Accuracy Season WPM`, seasonWpm, true)
-                                    .addField(`Total Season Races`, racingInfo[0].played, true)
-                                    .addField(`Applicant Daily Accuracy`, dailyAcc, true)
-                                    .addField(`Accuracy Daily WPM`, dailyWpm, true)
-                                    .addField(`Daily Races`, dailyPlayed, true)
-                                    .setTimestamp(message.createdAt);
-
-                                if(seasonWpm < 60 && seasonAcc < 96){
-                                    applyEmbed.setDescription(`**Application rejected by the Auto Rejection System**\n**Reason:** Accuracy and WPM are too low. The minimun accuracy and WPM are in <#${process.env.INFORMATION_CHANNEL}> as with other information. You will be able to apply again in 30 days.`);
-                                    sendAuthorDM.senddm(author.id, "reject", client.user.tag, message, applyEmbed);
-                                } else if(seasonWpm < 60){
-                                    applyEmbed.setDescription(`**Application rejected by the Auto Rejection System**\n**Reason:** WPM is too low. The minimun WPM is in <#${process.env.INFORMATION_CHANNEL}> as with other information. You will be able to apply again in 30 days.`);
-                                    sendAuthorDM.senddm(author.id, "reject", client.user.tag, message, applyEmbed);
-                                } else if(seasonAcc < 96){
-                                    applyEmbed.setDescription(`**Application rejected by the Auto Rejection System**\n**Reason:** Accuracy is too low. The minimun accuracy is in <#${process.env.INFORMATION_CHANNEL}> as with other information. You will be able to apply again in 30 days.`);
-                                    sendAuthorDM.senddm(author.id, "reject", client.user.tag, message, applyEmbed);
-                                } 
-                                const reply = await message.reply(`Your application has been auto rejected. Please check your dms for more information. If you have any question, DM <@!${client.user.id}>. The format for asking a question is: \`elixir.question [question]\`. Brackets not required.`)
-                                    .then(setTimeout(() => reply.delete(), 60000));
-
-                                let role = message.guild.roles.cache.find(r => r.name.toLowerCase() === process.env.JUST_JOINED);
-                                let roler = message.guild.roles.cache.find(r => r.name.toLowerCase() === process.env.APPLICATION_REJECTED);
-                                if(role && roler && author){
-                                    author.roles.add(roler);
-                                    author.roles.remove(role);
+                            if(dmOpen){
+                                const seasonAcc = Math.floor(((racingInfo[0].typed - racingInfo[0].errs)/racingInfo[0].typed)*100);
+                                const seasonWpm = Math.floor((racingInfo[0].typed/5)/(Number(racingInfo[0].secs)/60));
+                                let dailyPlayed;
+                                let dailyAcc;
+                                let dailyWpm;
+                                if(racingInfo[1]){
+                                    dailyWpm = Math.floor((racingInfo[1].typed/5)/(Number(racingInfo[1].secs)/60));
+                                    dailyAcc = Math.floor(((racingInfo[1].typed - racingInfo[1].errs)/racingInfo[1].typed)*100);
+                                    dailyPlayed = racingInfo[1].played;
+                                } else {
+                                    dailyWpm = 0;
+                                    dailyAcc = 0;
+                                    dailyPlayed = 0;
                                 }
-                                reapplytime.send(`<@!${author.id}> has not met the reqirements. They can reapply in 30 days from today. Today is ${new Date().toLocaleDateString()}`);
-                                applicationSend.send(applyEmbed);
-                            } else {
-                                const appid = await applicationSend.send(`_ _`);
+                                if(seasonWpm < 60 || seasonAcc < 96){
+                                    let reapplytime = message.guild.channels.cache.get(process.env.RE_APPLY_LOG);
+                                    dmSend.delete();
+                                    const applyEmbed = new Discord.MessageEmbed()
+                                        .setColor("RED")
+                                        .setAuthor(author.user.tag, message.author.avatarURL())
+                                        .setTitle(`Application Sent By: ${author.id}\nApplication ID: N/A Auto Reject`)
+                                        .setTitle(`New Application Sent By: ${author.user.tag}\nApplication ID: N/A`)
+                                        .addField(`Applicant Nitrotype Profile Link`, args[1])
+                                        .addField(`Applicant Season Accuracy`, seasonAcc, true)
+                                        .addField(`Accuracy Season WPM`, seasonWpm, true)
+                                        .addField(`Total Season Races`, racingInfo[0].played, true)
+                                        .addField(`Applicant Daily Accuracy`, dailyAcc, true)
+                                        .addField(`Accuracy Daily WPM`, dailyWpm, true)
+                                        .addField(`Daily Races`, dailyPlayed, true)
+                                        .setTimestamp(message.createdAt);
 
-                                const secondEmbed = new Discord.MessageEmbed()
-                                    .setColor("ORANGE")
-                                    .setAuthor(author.user.tag, message.author.avatarURL())
-                                    .setTitle(`New Application Sent By: ${author.user.tag}\nApplication ID: ${appid.id}`)
-                                    .addField(`Applicant Nitrotype Profile Link`, args[1])
-                                    .addField(`Applicant Season Accuracy`, seasonAcc, true)
-                                    .addField(`Accuracy Season WPM`, seasonWpm, true)
-                                    .addField(`Total Season Races`, racingInfo[0].played, true)
-                                    .addField(`Applicant Daily Accuracy`, dailyAcc, true)
-                                    .addField(`Accuracy Daily WPM`, dailyWpm, true)
-                                    .addField(`Daily Races`, dailyPlayed, true)
-                                    .setDescription(`Application Pending Review`)
-                                    .setFooter(`Author ID: ${author.id}`)
-                                    .setTimestamp(message.createdAt);
+                                    if(seasonWpm < 60 && seasonAcc < 96){
+                                        applyEmbed.setDescription(`**Application rejected by the Auto Rejection System**\n**Reason:** Accuracy and WPM are too low. The minimun accuracy and WPM are in <#${process.env.INFORMATION_CHANNEL}> as with other information. You will be able to apply again in 30 days.`);
+                                        sendAuthorDM.senddm(author.id, "reject", client.user.tag, message, applyEmbed);
+                                    } else if(seasonWpm < 60){
+                                        applyEmbed.setDescription(`**Application rejected by the Auto Rejection System**\n**Reason:** WPM is too low. The minimun WPM is in <#${process.env.INFORMATION_CHANNEL}> as with other information. You will be able to apply again in 30 days.`);
+                                        sendAuthorDM.senddm(author.id, "reject", client.user.tag, message, applyEmbed);
+                                    } else if(seasonAcc < 96){
+                                        applyEmbed.setDescription(`**Application rejected by the Auto Rejection System**\n**Reason:** Accuracy is too low. The minimun accuracy is in <#${process.env.INFORMATION_CHANNEL}> as with other information. You will be able to apply again in 30 days.`);
+                                        sendAuthorDM.senddm(author.id, "reject", client.user.tag, message, applyEmbed);
+                                    } 
+                                    const reply = await message.reply(`Your application has been auto rejected. Please check your dms for more information. If you have any question, DM <@!${client.user.id}>. The format for asking a question is: \`elixir.question [question]\`. Brackets not required.`)
+                                        .then(setTimeout(() => reply.delete(), 60000));
 
-                                appid.edit(secondEmbed);
-                                const reply = await message.reply(`Your application has been recorded. Please be patient as the officers review your application. If you have any question, DM <@!${client.user.id}>. The format for asking a question is: \`elixir.question [question]\`. Brackets not required.`)
-                                    .then(setTimeout(()=>{reply.delete();}, 60000));
-                                let role2 = message.guild.roles.cache.find(r => r.name.toLowerCase() === process.env.JUST_JOINED);
-                                let role = message.guild.roles.cache.find(r => r.name.toLowerCase() === process.env.APPLICATION_ROLE);
-                                if(role && role2){
-                                    author.roles.add(role);
-                                    author.roles.remove(role2);
+                                    let role = message.guild.roles.cache.find(r => r.name.toLowerCase() === process.env.JUST_JOINED);
+                                    let roler = message.guild.roles.cache.find(r => r.name.toLowerCase() === process.env.APPLICATION_REJECTED);
+                                    if(role && roler && author){
+                                        author.roles.add(roler);
+                                        author.roles.remove(role);
+                                    }
+                                    reapplytime.send(`<@!${author.id}> has not met the reqirements. They can reapply in 30 days from today. Today is ${new Date().toLocaleDateString()}`);
+                                    applicationSend.send(applyEmbed);
+                                } else {
+                                    const appid = await applicationSend.send(`_ _`);
+
+                                    const secondEmbed = new Discord.MessageEmbed()
+                                        .setColor("ORANGE")
+                                        .setAuthor(author.user.tag, message.author.avatarURL())
+                                        .setTitle(`New Application Sent By: ${author.user.tag}\nApplication ID: ${appid.id}`)
+                                        .addField(`Applicant Nitrotype Profile Link`, args[1])
+                                        .addField(`Applicant Season Accuracy`, seasonAcc, true)
+                                        .addField(`Accuracy Season WPM`, seasonWpm, true)
+                                        .addField(`Total Season Races`, racingInfo[0].played, true)
+                                        .addField(`Applicant Daily Accuracy`, dailyAcc, true)
+                                        .addField(`Accuracy Daily WPM`, dailyWpm, true)
+                                        .addField(`Daily Races`, dailyPlayed, true)
+                                        .setDescription(`Application Pending Review`)
+                                        .setFooter(`Author ID: ${author.id}`)
+                                        .setTimestamp(message.createdAt);
+
+                                    appid.edit(secondEmbed);
+                                    const reply = await message.reply(`Your application has been recorded. Please be patient as the officers review your application. If you have any question, DM <@!${client.user.id}>. The format for asking a question is: \`elixir.question [question]\`. Brackets not required.`)
+                                        .then(setTimeout(()=>{reply.delete();}, 60000));
+                                    let role2 = message.guild.roles.cache.find(r => r.name.toLowerCase() === process.env.JUST_JOINED);
+                                    let role = message.guild.roles.cache.find(r => r.name.toLowerCase() === process.env.APPLICATION_ROLE);
+                                    if(role && role2){
+                                        author.roles.add(role);
+                                        author.roles.remove(role2);
+                                    }
+                                    else console.log(`Could not find ${process.env.APPLICATION_ROLE}`);
                                 }
-                                else console.log(`Could not find ${process.env.APPLICATION_ROLE}`);
                             }
+                        } else {
+                            const reply = await message.reply(`I could not find any stats for <${args[1]}>! Either that is not a user or you have not raced this season! If it is you, please race a few times before applying again.`)
+                                .then(setTimeout(() => reply.delete(), 60000));
                         }
                     } else {
-                        const reply = await message.reply(`I could not find any stats for <${args[1]}>! Either that is not a user or you have not raced this season! If it is you, please race a few times before applying again.`)
-                            .then(setTimeout(() => reply.delete(), 60000));
+                        const reply = await message.reply(`Please have at least 20 season races and apply again.`)
+                                .then(setTimeout(() => reply.delete(), 60000));
                     }
                 } else if(reason === "else" || reason === "time"){
                     const sendmessage = await message.channel.send("Application Stopped")
