@@ -121,7 +121,7 @@ function sendapply(message, args, Discord, userApplyList, client){
                                     dailyAcc = 0;
                                     dailyPlayed = 0;
                                 }
-                                if(seasonWpm < 60 || seasonAcc < 96){
+                                if(seasonWpm < 50 || seasonAcc < 96){
                                     let reapplytime = message.guild.channels.cache.get(process.env.RE_APPLY_LOG);
                                     dmSend.delete();
                                     const applyEmbed = new Discord.MessageEmbed()
@@ -138,10 +138,10 @@ function sendapply(message, args, Discord, userApplyList, client){
                                         .addField(`Daily Races`, dailyPlayed, true)
                                         .setTimestamp(message.createdAt);
 
-                                    if(seasonWpm < 60 && seasonAcc < 96){
+                                    if(seasonWpm < 50 && seasonAcc < 96){
                                         applyEmbed.setDescription(`**Application rejected by the Auto Rejection System**\n**Reason:** Accuracy and WPM are too low. The minimun accuracy and WPM are in <#${process.env.INFORMATION_CHANNEL}> as with other information. You will be able to apply again in 30 days.`);
                                         sendAuthorDM.senddm(author.id, "reject", client.user.tag, message, applyEmbed);
-                                    } else if(seasonWpm < 60){
+                                    } else if(seasonWpm < 50){
                                         applyEmbed.setDescription(`**Application rejected by the Auto Rejection System**\n**Reason:** WPM is too low. The minimun WPM is in <#${process.env.INFORMATION_CHANNEL}> as with other information. You will be able to apply again in 30 days.`);
                                         sendAuthorDM.senddm(author.id, "reject", client.user.tag, message, applyEmbed);
                                     } else if(seasonAcc < 96){
