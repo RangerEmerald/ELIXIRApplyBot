@@ -79,28 +79,6 @@ client.on('message', async message => {
     }
 });
 
-// client.on('messageDelete', async message => {
-//     try{
-//         if(message.channel.id === process.env.APPLY_CHANNEL_ID){
-//             if(!message.partial){
-//                 let consoles = message.guild.channels.cache.get(process.env.LOG_CHANNEL);
-//                 if(!consoles) return;
-//                 if(message.author.bot) return;
-//                 let consoleEmbed = new Discord.MessageEmbed()
-//                     .setColor("#ffa500")
-//                     .setAuthor(message.member.user.tag)
-//                     .setDescription(`**Message sent by <@!${message.author.id}> was deleted in <#${message.channel.id}>**\n${message.content}`)
-//                     .setFooter(`Author ID: ${message.author.id} | Message ID: ${message.author.id}`)
-//                     .setTimestamp(message.createdAt);
-
-//                 consoles.send(consoleEmbed);
-//             }
-//         }
-//     } catch(err){
-//         console.log(err)    
-//     }
-// });
-
 client.on('guildMemberAdd', async member => {
     try{
         let role = member.guild.roles.cache.find(r => r.name.toLowerCase() === process.env.JUST_JOINED);
