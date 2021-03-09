@@ -1,3 +1,5 @@
+const startingTime = new Date().getTime();
+
 require('dotenv').config();
 const Discord = require('discord.js');
 const client = new Discord.Client({partials:["MESSAGE"]});
@@ -13,17 +15,27 @@ const checkUser = require('./commands/moderation/commandsUserTimeout.js');
 
 const { similarity } = require('./commands/other/similar.js');
 
+const { runprocess } = require('./commands/moderation/process');
 const prefix = process.env.BOT_PREFIX;
 
 let userApplyList = {};
 let answerQuestionList = {};
 let revApplicationList = {};
 
+const processID = Math.round(Math.random() * 99999);
+
 const clientActivity = ['For someone to apply', 'For the prefix: elixir.'];
 let clientActivityNumber = 0;
 
-client.on('ready', () => {
+client.on('ready', async () => {
     console.log(`${client.user.tag} has logged in`);
+    const applychannel = client.channels.cache.get(process.env.APPLY_CHANNEL_ID);
+    await applychannel.overwritePermissions([
+        {
+           id: process.env.APPLYID,
+           allow: ['SEND_MESSAGES']
+        },
+    ]);
     client.user.setActivity(`For someone to apply`, { type: "WATCHING"})
         .then(setInterval(() => {
             if(clientActivityNumber === 0){
@@ -33,7 +45,17 @@ client.on('ready', () => {
                 clientActivityNumber = 0;
                 client.user.setActivity(clientActivity[clientActivityNumber], { type: "WATCHING" });
             }
-        }, 5000));
+        }, 5000))
+        .then(setTimeout(async () => {
+            await applychannel.overwritePermissions([
+                {
+                   id: process.env.APPLYID,
+                   deny: ['SEND_MESSAGES']
+                },
+            ]);
+            await applychannel.send("Waiting for bot to restart...");
+            await client.destroy();
+        }, 864000000));
 });
 
 client.on('message', async message => {
@@ -62,6 +84,7 @@ client.on('message', async message => {
             if(message.channel.id === process.env.APPLYSEND_CHANNEL_ID){
                 reviewApplication.reviewapply(message, args, Discord, prefix, revApplicationList);
             } else if(message.channel.id === process.env.BOT_CHANNEL){
+                if (args[0] == "process") return runprocess(message, processID, args, startingTime, client);
                 checkUser.checkTimeout(message, args, Discord);
             } else if(message.channel.id === process.env.QUESTION_CHANNEL){
                 answerQuestion.aswQuestion(args, message, Discord, answerQuestionList);
